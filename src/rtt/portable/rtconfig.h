@@ -37,12 +37,18 @@
 
 // <o>the size of main thread<1-4086>
 //	<i>Default: 512
-#define RT_MAIN_THREAD_STACK_SIZE 1024
+#define RT_MAIN_THREAD_STACK_SIZE 512
 
 // <c1>using tiny size of memory
 //  <i>using tiny size of memory
 //#define RT_USING_TINY_SIZE
 // </c>
+
+
+// <o>idle thread stack size of memory
+//  <i>空闲任务堆栈大小
+#define IDLE_THREAD_STACK_SIZE 128
+
 // </h>
 
 // <h>Debug Configuration
