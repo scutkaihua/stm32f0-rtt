@@ -312,7 +312,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>4</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER,STM32F0XX,</Define>
               <Undefine></Undefine>
-              <IncludePath>..\cpu;..\cpu\inc;..\cpu\cmsis_inc;..\rtt\include;..\rtt\portable</IncludePath>
+              <IncludePath>..\cpu;..\cpu\inc;..\cpu\cmsis_inc;..\rtt\include;..\rtt\portable;..\mshell;..\drivers;..\lib</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -391,9 +391,6 @@
         </Group>
         <Group>
           <GroupName>system</GroupName>
-        </Group>
-        <Group>
-          <GroupName>rtt/component</GroupName>
         </Group>
         <Group>
           <GroupName>rtt/src</GroupName>
@@ -501,11 +498,172 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>dev</GroupName>
+          <GroupName>drivers</GroupName>
+          <Files>
+            <File>
+              <FileName>driver_config.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\driver_config.c</FilePath>
+            </File>
+            <File>
+              <FileName>driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\driver.c</FilePath>
+            </File>
+            <File>
+              <FileName>systemclock.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\systemclock.c</FilePath>
+            </File>
+            <File>
+              <FileName>uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>exti.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\exti.c</FilePath>
+            </File>
+            <File>
+              <FileName>flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>iic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\iic.c</FilePath>
+            </File>
+            <File>
+              <FileName>ir.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\ir.c</FilePath>
+            </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>watchdog.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\watchdog.c</FilePath>
+            </File>
+            <File>
+              <FileName>74hc595.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\74hc595.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>mshell</GroupName>
+          <GroupOption>
+            <CommonProperty>
+              <UseCPPCompiler>0</UseCPPCompiler>
+              <RVCTCodeConst>0</RVCTCodeConst>
+              <RVCTZI>0</RVCTZI>
+              <RVCTOtherData>0</RVCTOtherData>
+              <ModuleSelection>0</ModuleSelection>
+              <IncludeInBuild>0</IncludeInBuild>
+              <AlwaysBuild>2</AlwaysBuild>
+              <GenerateAssemblyFile>2</GenerateAssemblyFile>
+              <AssembleAssemblyFile>2</AssembleAssemblyFile>
+              <PublicsOnly>2</PublicsOnly>
+              <StopOnExitCode>11</StopOnExitCode>
+              <CustomArgument></CustomArgument>
+              <IncludeLibraryModules></IncludeLibraryModules>
+              <ComprImg>1</ComprImg>
+            </CommonProperty>
+            <GroupArmAds>
+              <Cads>
+                <interw>2</interw>
+                <Optim>0</Optim>
+                <oTime>2</oTime>
+                <SplitLS>2</SplitLS>
+                <OneElfS>2</OneElfS>
+                <Strict>2</Strict>
+                <EnumInt>2</EnumInt>
+                <PlainCh>2</PlainCh>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <wLevel>0</wLevel>
+                <uThumb>2</uThumb>
+                <uSurpInc>2</uSurpInc>
+                <uC99>2</uC99>
+                <uGnu>2</uGnu>
+                <useXO>2</useXO>
+                <v6Lang>0</v6Lang>
+                <v6LangP>0</v6LangP>
+                <vShortEn>2</vShortEn>
+                <vShortWch>2</vShortWch>
+                <v6Lto>2</v6Lto>
+                <v6WtE>2</v6WtE>
+                <v6Rtti>2</v6Rtti>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Cads>
+              <Aads>
+                <interw>2</interw>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <thumb>2</thumb>
+                <SplitLS>2</SplitLS>
+                <SwStkChk>2</SwStkChk>
+                <NoWarn>2</NoWarn>
+                <uSurpInc>2</uSurpInc>
+                <useXO>2</useXO>
+                <uClangAs>2</uClangAs>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Aads>
+            </GroupArmAds>
+          </GroupOption>
+          <Files>
+            <File>
+              <FileName>mshell.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mshell\mshell.c</FilePath>
+            </File>
+            <File>
+              <FileName>mshell.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\mshell\mshell.h</FilePath>
+            </File>
+            <File>
+              <FileName>mshell_config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\mshell\mshell_config.h</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>cpu</GroupName>
           <Files>
+            <File>
+              <FileName>stm32f0xx_it.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\cpu\stm32f0xx_it.c</FilePath>
+            </File>
+            <File>
+              <FileName>cpu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\cpu\cpu.c</FilePath>
+            </File>
             <File>
               <FileName>startup_stm32f030x8.s</FileName>
               <FileType>2</FileType>
@@ -625,6 +783,18 @@
         </Group>
         <Group>
           <GroupName>lib</GroupName>
+          <Files>
+            <File>
+              <FileName>cbuffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\lib\cbuffer.c</FilePath>
+            </File>
+            <File>
+              <FileName>lib.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\lib\lib.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>生成</GroupName>

@@ -29,8 +29,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_it.h"
-#include "types.h"
-#include "includes.h"
+#include "driver.h"
 /** @addtogroup STM32F0308-Discovery_Demo
   * @{
   */
@@ -65,31 +64,31 @@ void NMI_Handler(void)
   * @param  None
   * @retval None
   */
-void HardFault_Handler(void)
-{
-  /* Go to infinite loop when Hard Fault exception occurs */
-  while (1)
-  {
-  }
-}
+//void HardFault_Handler(void)
+//{
+//  /* Go to infinite loop when Hard Fault exception occurs */
+//  while (1)
+//  {
+//  }
+//}
 
-/**
-  * @brief  This function handles SVCall exception.
-  * @param  None
-  * @retval None
-  */
-void SVC_Handler(void)
-{
-}
+///**
+//  * @brief  This function handles SVCall exception.
+//  * @param  None
+//  * @retval None
+//  */
+//void SVC_Handler(void)
+//{
+//}
 
-/**
-  * @brief  This function handles PendSVC exception.
-  * @param  None
-  * @retval None
-  */
-void PendSV_Handler(void)
-{
-}
+///**
+//  * @brief  This function handles PendSVC exception.
+//  * @param  None
+//  * @retval None
+//  */
+//void PendSV_Handler(void)
+//{
+//}
 
 /**
   * @brief  This function handles TIM3 global interrupt request.
@@ -170,8 +169,7 @@ void USART1_IRQHandler(void)
   * @param  None
   * @retval None
   */
-PROCESS_NAME(thread_packet);
-extern HPacket hpacket;
+//extern HPacket hpacket;
 void USART2_IRQHandler(void)
 {
 	USART_TypeDef *pUart=USART2;
@@ -180,10 +178,10 @@ void USART2_IRQHandler(void)
   if(USART_GetITStatus(pUart, USART_IT_RXNE)  != RESET)
   {
 		temp = USART_ReceiveData(pUart)& 0xff;
-	  if(packet_recv(temp,&hpacket)!=NULL)
-		{	
-			process_post_synch(&thread_packet,PROCESS_EVENT_PACKET,(void*)&hpacket.p);//发送一个事件给packet任务
-		}
+//	  if(packet_recv(temp,&hpacket)!=NULL)
+//		{	
+//			//process_post_synch(&thread_packet,PROCESS_EVENT_PACKET,(void*)&hpacket.p);//发送一个事件给packet任务
+//		}
 		//ld_uart_isp(2,&temp,0);
 		USART_ClearITPendingBit(pUart, USART_IT_RXNE);						
   }
@@ -203,7 +201,7 @@ void USART2_IRQHandler(void)
 	
 	if(USART_GetFlagStatus(pUart,USART_FLAG_TC)==SET)
 	{
-		enable_485_rx();
+		//enable_485_rx();
 		USART_ClearFlag(pUart,USART_FLAG_TC);	//读SR
 	}
 	
@@ -243,7 +241,7 @@ void EXTI4_15_IRQHandler(void)
   { 
 		if(GPIO_ReadInputDataBit(GPIOF, GPIO_Pin_6)==1)
 		{
-				fsm_charge(3,0x99);
+				//fsm_charge(3,0x99);
 		}	
     /* Clear the EXTI line 6 pending bit */
     EXTI_ClearITPendingBit(EXTI_Line6);
@@ -253,7 +251,7 @@ void EXTI4_15_IRQHandler(void)
   {
 		if(GPIO_ReadInputDataBit(GPIOF, GPIO_Pin_7)==1)
 		{
-      fsm_charge(4,0x99);
+      //fsm_charge(4,0x99);
 		}	
     /* Clear the EXTI line 6 pending bit */
     EXTI_ClearITPendingBit(EXTI_Line7);
@@ -263,7 +261,7 @@ void EXTI4_15_IRQHandler(void)
   {
 		if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_8)==1)
 		{
-			fsm_charge(2,0x99);
+			//fsm_charge(2,0x99);
 		}	
     /* Clear the EXTI line 6 pending bit */
     EXTI_ClearITPendingBit(EXTI_Line8);
@@ -273,7 +271,7 @@ void EXTI4_15_IRQHandler(void)
   {
 		if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_12)==1)
 		{
-			fsm_charge(5,0x99);
+			//fsm_charge(5,0x99);
 		}	
     /* Clear the EXTI line 6 pending bit */
     EXTI_ClearITPendingBit(EXTI_Line12);
@@ -283,7 +281,7 @@ void EXTI4_15_IRQHandler(void)
   {
 		if(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_15)==1)
 		{
-			fsm_charge(1,0x99);
+			//fsm_charge(1,0x99);
 		}	
     /* Clear the EXTI line 6 pending bit */
     EXTI_ClearITPendingBit(EXTI_Line15);

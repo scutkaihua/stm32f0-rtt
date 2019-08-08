@@ -89,13 +89,13 @@ void cpu_nivc_set(U32 ch,U32 priority,BOOL cmd);
 
 void GPIO_ReleaseSWDJ(void);/*释放调试端口*/
 int cpu_gpioaf_cfg(U8 xPort,U8 xPin,U8 AF);
-int cpu_gpio_cfg(U8 xPort,U8 xPin,U8 xMode,U8 xOType,U8 sta,U8 xSpeed);
+int cpu_gpio_cfg(U8 xPort,U8 xPin,U8 xMode,U8 xOType,U8 xPP,U8 sta,U8 xSpeed);
 int cpu_gpio_set(U8 xPort,U8 xPin,U8 sta);
 int cpu_gpio_get(U8 xPort,U8 xPin);
 
 
 /*通用cpu gpio 设置读写*/
-#define cpu_gpio_map_config(set,X)       cpu_gpio_cfg(set[(X)].xPort,set[(X)].xPin,set[(X)].xMode,set[(X)].xOType,set[(X)].xSta,set[(X)].xSpeed)
+#define cpu_gpio_map_config(set,X)       cpu_gpio_cfg(set[(X)].xPort,set[(X)].xPin,set[(X)].xMode,set[(X)].xOType,set[(X)].xPP,set[(X)].xSta,set[(X)].xSpeed)
 #define cpu_gpio_map_get(set,X)				   cpu_gpio_get(set[(X)].xPort,set[(X)].xPin)
 #define cpu_gpio_map_set(set,X,value)		 cpu_gpio_set(set[(X)].xPort,set[(X)].xPin,value)
 

@@ -160,7 +160,7 @@ int cpu_gpioaf_cfg(U8 xPort,U8 xPin,U8 AF)
 * xSpeed:速度 :0-3 :2,25,50,100 MHz
 * return: true or false
 */
-int cpu_gpio_cfg(U8 xPort,U8 xPin,U8 xMode,U8 xOType,U8 sta,U8 xSpeed)
+int cpu_gpio_cfg(U8 xPort,U8 xPin,U8 xMode,U8 xOType,U8 xPP,U8 sta,U8 xSpeed)
 {
     GPIO_InitTypeDef xGpioInit;
     GPIO_TypeDef* GPIOx;
@@ -173,6 +173,7 @@ int cpu_gpio_cfg(U8 xPort,U8 xPin,U8 xMode,U8 xOType,U8 sta,U8 xSpeed)
     xGpioInit.GPIO_Mode=(GPIOMode_TypeDef)xMode;
     xGpioInit.GPIO_OType = (GPIOOType_TypeDef)xOType;
     xGpioInit.GPIO_Speed = (GPIOSpeed_TypeDef)xSpeed;
+	  xGpioInit.GPIO_PuPd = (GPIOPuPd_TypeDef)xPP;
     RCC_AHBPeriphClockCmd(RCC_GPIO_TABLE[xPort], ENABLE);
     /*当作为输出时，初始化输出电平*/
     if ( xMode == GPIO_Mode_OUT )

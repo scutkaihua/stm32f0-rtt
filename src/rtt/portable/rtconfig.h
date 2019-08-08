@@ -124,6 +124,12 @@
 // </h>
 
 // <h>Memory Management Configuration
+
+// <o>rt heap size <#/4>
+//  <i>Default: 1536
+//  <i>rt thread 使用的内部堆大小
+#define RT_HEAP_SIZE 1536
+
 // <c1>Using Memory Pool Management
 //  <i>Using Memory Pool Management
 //#define RT_USING_MEMPOOL
@@ -155,53 +161,18 @@
 #define RT_CONSOLE_DEVICE_NAME "uart2"
 // </h>
 
-#if defined(RTE_USING_DEVICE)
+//<h>Device
+// <c1>Using Device
+//  <i>Using Device
 #define RT_USING_DEVICE
-#define RT_USING_SERIAL
-#define BSP_USING_UART2
-#endif
-
-#if defined(RTE_USING_FINSH)
-
-// <h>Finsh Configuration
-// <c1>Using FinSh Shell
-//  <i>Using FinSh Shell
-#define RT_USING_FINSH
 // </c>
 
-// <c1>Using Msh Shell
-//  <i>Using Msh Shell
-#define FINSH_USING_MSH
+// <c1>Using Device Ops
+//  <i>Using Device Ops
+//#define RT_USING_DEVICE_OPS
 // </c>
 
-// <c1>Only using Msh Shell
-//  <i>Only using Msh Shell
-#define FINSH_USING_MSH_ONLY
-// </c>
-
-// <o>the priority of finsh thread <1-7>
-//  <i>the priority of finsh thread
-//  <i>Default: 6
-#define __FINSH_THREAD_PRIORITY     1
-#define FINSH_THREAD_PRIORITY       (RT_THREAD_PRIORITY_MAX / 8 * __FINSH_THREAD_PRIORITY + 1)
-
-// <o>the stack of finsh thread <1-4096>
-//  <i>the stack of finsh thread
-//  <i>Default: 4096  (4096Byte)
-#define FINSH_THREAD_STACK_SIZE 1024
-
-// <o>the history lines of finsh thread <1-32>
-//  <i>the history lines of finsh thread
-//  <i>Default: 5
-#define FINSH_HISTORY_LINES	        5
-
-// <c1>Using symbol table in finsh shell
-//  <i>Using symbol table in finsh shell
-//#define FINSH_USING_SYMTAB
-// </c>
-// </h>
-
-#endif //RTE_USING_FINSH
+//</h>
 
 // <<< end of configuration section >>>
 
