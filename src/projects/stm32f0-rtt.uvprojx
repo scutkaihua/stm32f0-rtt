@@ -635,6 +635,16 @@
           </GroupOption>
           <Files>
             <File>
+              <FileName>mshell_cmd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mshell\mshell_cmd.c</FilePath>
+            </File>
+            <File>
+              <FileName>mshell_permission.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mshell\mshell_permission.c</FilePath>
+            </File>
+            <File>
               <FileName>mshell.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\mshell\mshell.c</FilePath>
