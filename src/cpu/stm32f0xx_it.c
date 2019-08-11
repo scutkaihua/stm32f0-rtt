@@ -116,6 +116,9 @@ void USART1_IRQHandler(void)
 {
 	USART_TypeDef *pUart=USART1;
 	char temp;
+	
+	rt_interrupt_enter();
+	
   /* USART in mode Receiver --------------------------------------------------*/
   if(USART_GetITStatus(USART1, USART_IT_RXNE)  != RESET)
   {
@@ -162,7 +165,7 @@ void USART1_IRQHandler(void)
 		USART_ClearFlag(pUart,USART_FLAG_PE);	//¶ÁSR
 		USART_ReceiveData(pUart);	//¶ÁDR
 	}	 			
-	
+	rt_interrupt_leave();
 }
 /**
   * @brief  This function handles USART2_IRQHandler.
@@ -174,6 +177,7 @@ void USART2_IRQHandler(void)
 {
 	USART_TypeDef *pUart=USART2;
 	char temp;
+	rt_interrupt_enter();
   /* USART in mode Receiver --------------------------------------------------*/
   if(USART_GetITStatus(pUart, USART_IT_RXNE)  != RESET)
   {
@@ -227,7 +231,9 @@ void USART2_IRQHandler(void)
 	{
 		USART_ClearFlag(pUart,USART_FLAG_PE);	//¶ÁSR
 		USART_ReceiveData(pUart);	//¶ÁDR
-	}	 			
+	}	 
+
+  rt_interrupt_leave();	
 } 
 
 

@@ -149,7 +149,7 @@ const unsigned char uart_number = sizeof(uart_map) /(sizeof(t_uart_map)) - 1;
 void ld_dev_init(void)
 {
 	//œµÕ≥ ±÷”
-	ld_system_clock(16);
+	//ld_system_clock(16);
 
 	//iap
 	ld_iap();

@@ -3,26 +3,32 @@
 
 #include "types.h"
 
-
 // <<< Use Configuration Wizard in Context Menu >>>
 //<s> 终端前导字符
-#define MSHELL_PROMPT         "msh>>"
+#define MSHELL_PROMPT         "msh>"
 //<o> 命令长度
 #define MSHELL_CMD_SIZE       50
 
-//<c> 支持路径
-#define MSHELL_USING_DIR 
+//<c>回显
+#define MSHELL_USING_ECHO
 //</c>
 
+//<e> 支持路径
+#define MSHELL_USING_DIR       1
+//<o> 目录最大长度
+#define MSHELL_DIR_MAX 64
+//</e>
+
 //<c> 支持登录
-#define MSHELL_USING_LOGIN
+//#define MSHELL_USING_LOGIN
 //</c>
 
 //<e> 支持历史记录
-#define MSHELL_HISTORY         0
+#define MSHELL_USING_HISTORY         1
 //<o> 条数 
 #define MSHELL_HISTORY_LINES  10
 //</e>
 
 #endif
 
+#define mshell_printf rt_kprintf
