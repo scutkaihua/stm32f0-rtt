@@ -49,13 +49,18 @@ static long list(char*indir)
 	return list_dir(finsh_grade,mshell_dir,indir,dir);
 }
 
+/*版本*/
+static long ver(void)
+{
+	mshell_printf(MSHELL_VERSION);
+	return 1;
+}
+
 
 Export(root,ls,list,        	  "ls 或者 ls() 列表内容")
 Export(root,cd,cd,							"cd string  或者 cd(string)")
 
-Export(info,ls1,list,        	  "ls 或者 ls() 列表内容")
-Export(info,cd1,cd,							"cd string  或者 cd(string)")
-
+Export(info,ver,ver,        	  "ver 或者 ver() 版本号")
 
 /*finsh优先运行，特殊命令*/
 int finsh_run_line_first(char*line)

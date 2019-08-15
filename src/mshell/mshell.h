@@ -30,6 +30,8 @@ typedef struct{
 	
 	#if MSHELL_USING_DIR ==1
   char*dir;               //路径支持
+	#else
+	int grade;              //命令权限等级
 	#endif
 	
 	char*name;              //命令	
@@ -56,8 +58,8 @@ typedef struct{
 #define Export(dir,cmd,f,info) Mshell_Cmd const MshellCmd_##cmd msh_used mshsection(#dir) = \
        {(char*)#dir,(char*)#cmd,(char*)info,(syscall_func)&f};
 #else 
-#define Export(dir,cmd,f,info) Mshell_Cmd const MshellCmd_##cmd __attribute__((section("MSHELL")))  __attribute__((used)) = \
-       {(char*)#cmd,(char*)info,(syscall_func)&f};			 
+#define Export(grade,cmd,f,info) Mshell_Cmd const MshellCmd_##cmd __attribute__((section("MSHELL")))  __attribute__((used)) = \
+       {grade,(char*)#cmd,(char*)info,(syscall_func)&f};			 
 #endif
 
 /******************************************************************************

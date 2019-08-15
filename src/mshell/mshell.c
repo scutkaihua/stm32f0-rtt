@@ -98,17 +98,7 @@ static void mshell_history(signed char func)
   mshell_printf("%s%s", MSHELL_PROMPT,line);
 }
 #endif
-/******************************************************************************
-// 调用函数
-******************************************************************************/
-static void msell_call(void)
-{
-	/*查找函数*/
-	
-	/*确定参数个数*/
 
-  /*调用并返回*/
-}
 /******************************************************************************
 // 
 ******************************************************************************/
@@ -230,7 +220,8 @@ void mshell(char ch)
 				#endif
 				/*解析参数*/
 				/*查找命令，并运行*/
-			  finsh_run_line_first(line);
+			  mshell_cmd_call(line);
+			  //finsh_run_line_first(line);
 			  if (echo_mode)
 						mshell_printf("\n");
 				if(result==0)mshell_printf(MSHELL_PROMPT);

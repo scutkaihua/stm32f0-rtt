@@ -4,10 +4,16 @@
 #include "types.h"
 
 // <<< Use Configuration Wizard in Context Menu >>>
+//<s> 版本
+#define MSHELL_VERSION        "mshell v1.0"
 //<s> 终端前导字符
 #define MSHELL_PROMPT         "msh>"
 //<o> 命令长度
 #define MSHELL_CMD_SIZE       50
+//<o> 命令参数个数
+#define MSHELL_CMD_ARG_MAX    5
+//<o> 命令参数长度
+#define MSHELL_CMD_ARG_LEN    10
 
 //<c>回显
 #define MSHELL_USING_ECHO

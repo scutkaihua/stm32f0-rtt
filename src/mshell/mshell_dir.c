@@ -1,9 +1,11 @@
 #include "string.h"
 #include "mshell.h"
 
-/*当前目录*/
-char mshell_dir[MSHELL_DIR_MAX] = {0};
 
+#if MSHELL_USING_DIR>0
+
+/*当前目录*/
+char mshell_dir[MSHELL_DIR_MAX] = {'\/',0};
 
 /******************************************************************************
 // 
@@ -17,7 +19,7 @@ char*dir_parse(char*sdir,char*dir,char*out)
 		memcpy(out,sdir,strlen(sdir));
 		if(out[strlen(out)-1]== '>')out[strlen(out)-1]=0;
 		if(out[strlen(out)-1]!= '\/'){out[strlen(out)]='\/';}
-		
+
 		if(dir[0]=='\/'){
 			
 			//截取前面目录
@@ -75,6 +77,7 @@ char*dir_parse(char*sdir,char*dir,char*out)
 		}
 		
 		if( out[strlen(out)-1] == '\/')out[strlen(out)-1] = 0;
+		if( out[0]==0 ){out[0]='/';out[1]=0;}
 		return out;
 	}
 }
@@ -100,7 +103,8 @@ long list_dir(int g,char*sh_dir,char*indir,char*dir)
 	}
   if(dir[0]==0){dir[0]='\/';dir[1] = 0;}
 	mshell_printf("Dir :%s\r\n",dir);
-	mshell_printf("--Global List:\n");
+	mshell_printf("-- 命令----------- 描述------------------\n");
+//	mshell_printf("--Global List:\n");
 	
 	//当前路径命令
 	while(dirs != dire)
@@ -168,4 +172,6 @@ static long cd(char*in_dir)
 	}
 	return 0;
 }
+
+#endif
 
