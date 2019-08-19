@@ -102,8 +102,8 @@ long list_dir(int g,char*sh_dir,char*indir,char*dir)
 		if(p == NULL)return -1;
 	}
   if(dir[0]==0){dir[0]='\/';dir[1] = 0;}
-	mshell_printf("Dir :%s\r\n",dir);
-	mshell_printf("-- ÃüÁî----------- ÃèÊö------------------\n");
+	mshell_printf("Dir :%s\n",dir);
+	mshell_printf("-- ÃüÁî------------ ÃèÊö------------------");
 //	mshell_printf("--Global List:\n");
 	
 	//µ±Ç°Â·¾¶ÃüÁî
@@ -114,7 +114,7 @@ long list_dir(int g,char*sh_dir,char*indir,char*dir)
 			Mshell_Cmd*cs = dirs->start;
 			Mshell_Cmd*ce = dirs->end;
 			while(cs != ce){
-				mshell_printf("%-16s -- %s\n", cs->name, cs->desc);
+				mshell_printf("\n%-16s -- %s", cs->name, cs->desc);
 				cs++;
 			}
 		}else{
@@ -124,7 +124,7 @@ long list_dir(int g,char*sh_dir,char*indir,char*dir)
 				if( pdir[0] == '\/')pdir++;
 				if( strchr(pdir,'\/')==0)
 					{
-						mshell_printf("%-16s -- %s\n",pdir, "Ä¿Â¼");
+						mshell_printf("\n%-16s -- %s",pdir, "Ä¿Â¼");
 					}
 			}
 		}

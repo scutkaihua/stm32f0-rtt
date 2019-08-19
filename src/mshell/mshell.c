@@ -220,8 +220,8 @@ void mshell(char ch)
 				#endif
 				/*解析参数*/
 				/*查找命令，并运行*/
-			  mshell_cmd_call(line);
-			  //finsh_run_line_first(line);
+			  if(finsh_run_line_first(line)==0)
+			    mshell_cmd_call(line);
 			  if (echo_mode)
 						mshell_printf("\n");
 				if(result==0)mshell_printf(MSHELL_PROMPT);

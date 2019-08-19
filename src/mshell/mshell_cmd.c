@@ -11,8 +11,6 @@ extern int finsh_grade;
 extern char*dir_parse(char*sdir,char*dir,char*out);
 
 Export_DIR("/",root,0);
-Export_DIR("/info",info,0);
-
 static long cd(char*in_dir)
 {
 	char*in = in_dir;
@@ -26,14 +24,14 @@ static long cd(char*in_dir)
 		{
 			memset(mshell_dir,0,MSHELL_DIR_MAX);
 			strcpy(mshell_dir,dir);
-			mshell_printf("Dir :%s\r\n",dir);
+			mshell_printf("Dir :%s",dir);
 			mshell_dir[strlen(mshell_dir)] = '>';
 			return 1;
 		}else{
-			mshell_printf("No Dir:%s\r\n",dir);
+			mshell_printf("No Dir:%s",dir);
 		}
 	}else{
-		mshell_printf("Directory Error.\r\n");
+		mshell_printf("\nDirectory Error.");
 	}
 	return 0;
 }
@@ -56,11 +54,17 @@ static long ver(void)
 	return 1;
 }
 
+/*清屏*/
+static long cls(void)
+{
+	mshell_printf("\033[2J");
+	return 1;
+}
 
 Export(root,ls,list,        	  "ls 或者 ls() 列表内容")
 Export(root,cd,cd,							"cd string  或者 cd(string)")
-
-Export(info,ver,ver,        	  "ver 或者 ver() 版本号")
+Export(root,ver,ver,        	  "ver 或者 ver() 版本号")
+Export(root,cls,cls,        	  "cls 或者 cls() 清屏")
 
 /*finsh优先运行，特殊命令*/
 int finsh_run_line_first(char*line)
@@ -88,6 +92,14 @@ int finsh_run_line_first(char*line)
 		list(dir);
 	  return 1;
 	}
+	if((strcmp("ver",line)==0)||(strcmp("ver()",line)==0))
+	{
+		ver();return 1;
+	}
+	if((strcmp("cls",line)==0)||(strcmp("cls()",line)==0))
+	{
+		cls();return 1;
+	}
 	
-	return 1;
+	return 0;
 }

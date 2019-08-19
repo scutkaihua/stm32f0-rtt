@@ -12,6 +12,36 @@ extern int finsh_grade;
 	3.0x   Hex码 ==>转成 整型
 ******************************************************************************/
 long args[MSHELL_CMD_ARG_MAX][MSHELL_CMD_ARG_LEN/sizeof(long)];
+S8 argstep=0;
+S8 argline=0;
+S8 argoffset=0;
+void mshell_input_arg_parse(char ch)
+{
+	/*参数形式("xxxxxx(,",12345, 5678,"123213",0x123)*/
+	/**/
+	switch(argstep)
+	{
+		case 0:
+			if(ch=='(')argstep++;//开始参数
+			break;
+		case 2:
+			
+		/*-----------字符串-------------*/
+		case 10:
+	
+		/*-----------0x 0X16进制--------*/
+		case 20:
+			
+		/*-----------10进制数字---------*/
+			
+	}
+
+
+}
+
+
+
+
 int msell_parse_args(char*la)
 {
 	if(la==NULL)return 0;
@@ -133,7 +163,7 @@ long mshell_cmd_call(char*line)
 	if(cmd==NULL)return -1;
 	
 	//解析参数,调用命令
-	mshell_printf("\n");
+	//mshell_printf("\n");
 	if(n==NULL)return cmd->func(0);
 	else{
 		a = msell_parse_args(n+1);
