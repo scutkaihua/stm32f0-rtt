@@ -11,30 +11,6 @@ extern int finsh_grade;
 extern char*dir_parse(char*sdir,char*dir,char*out);
 
 Export_DIR("/",root,0);
-static long cd(char*in_dir)
-{
-	char*in = in_dir;
-	char dir[MSHELL_DIR_MAX] = {0};
-	char*out = NULL;
-	out = dir_parse(mshell_dir,in_dir,dir);
-  if(dir[0]==0){memset(dir,0,sizeof(dir));dir[0]='\/';}
-	if(out != NULL)
-	{	
-		if( is_dir(dir) != NULL)
-		{
-			memset(mshell_dir,0,MSHELL_DIR_MAX);
-			strcpy(mshell_dir,dir);
-			mshell_printf("Dir :%s",dir);
-			mshell_dir[strlen(mshell_dir)] = '>';
-			return 1;
-		}else{
-			mshell_printf("No Dir:%s",dir);
-		}
-	}else{
-		mshell_printf("\nDirectory Error.");
-	}
-	return 0;
-}
 
 /*列表当前目录，列表所有变量*/
 static long list(char*indir)
@@ -60,7 +36,7 @@ static long cls(void)
 	mshell_printf("\033[2J");
 	return 1;
 }
-
+extern long cd(char*in_dir);
 Export(root,ls,list,        	  "ls 或者 ls() 列表内容")
 Export(root,cd,cd,							"cd string  或者 cd(string)")
 Export(root,ver,ver,        	  "ver 或者 ver() 版本号")
@@ -80,7 +56,7 @@ int finsh_run_line_first(char*line)
 		if(strlen(dir)>0){dir[strlen(dir)]=0;}
 		cd(dir);
 		return 1;
-	}
+	}else if( memcmp("cd",line,size)==0 ){cd(0); return 1;}
 	if(strcmp("ls;",line)==0 || strcmp("ls",line)==0 )
 	{
 		list(NULL);

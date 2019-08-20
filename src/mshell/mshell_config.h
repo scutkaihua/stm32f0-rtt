@@ -20,7 +20,7 @@
 //</c>
 
 //<e> 支持路径
-#define MSHELL_USING_DIR       1
+#define MSHELL_USING_DIR       0
 //<o> 目录最大长度
 #define MSHELL_DIR_MAX 64
 //</e>

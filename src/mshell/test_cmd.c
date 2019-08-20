@@ -12,9 +12,16 @@ long helloworld(void*arg)
 }
 Export(test,hw,helloworld,"say hello to world!");
 
-long arg(void*arg)
+long arg(void*arg1,int*data)
 {
-	mshell_printf("arg:%s",arg!=NULL?arg:"null");
+	mshell_printf("arg1:%s,data=%d",arg1!=NULL?arg1:"null",*data);
 	return 1;
 }
 Export(test,arg,arg,"test arg");
+
+long reset(void*arg)
+{
+	board_reset();
+	return 1;
+}
+Export(test,rst,reset,"reset mcu.");

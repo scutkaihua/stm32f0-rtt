@@ -150,11 +150,10 @@ Mshell_Dir*is_dir(char*dir){
 	}	
 	return NULL;
 }
-static long cd(char*in_dir)
+long cd(char*in_dir)
 {
-	char*in = in_dir;
 	char dir[MSHELL_DIR_MAX] = {0};
-	char*out = dir_parse(mshell_dir,in_dir,dir);
+	char*out = dir_parse(mshell_dir,(in_dir==NULL)?("./"):(in_dir),dir);
   if(dir[0]==0){memset(dir,0,sizeof(dir));dir[0]='\/';}
 	if(out != NULL)
 	{	
@@ -162,13 +161,13 @@ static long cd(char*in_dir)
 		{
 			memset(mshell_dir,0,sizeof(mshell_dir));
 			strcpy(mshell_dir,dir);
-			mshell_printf("Dir :%s\r\n",dir);
+			mshell_printf("Dir :%s",dir);
 			mshell_dir[strlen(mshell_dir)] = '>';
 		}else{
-			mshell_printf("No Dir:%s\r\n",dir);
+			mshell_printf("No Dir:%s",dir);
 		}
 	}else{
-		mshell_printf("Directory Error.\r\n");
+		mshell_printf("Directory Error.");
 	}
 	return 0;
 }

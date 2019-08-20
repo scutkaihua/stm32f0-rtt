@@ -28,7 +28,7 @@ typedef long (*syscall_func)();
 /*命令类型*/
 typedef struct{
 	
-	#if MSHELL_USING_DIR ==1
+	#if MSHELL_USING_DIR>0
   char*dir;               //路径支持
 	#else
 	int grade;              //命令权限等级
@@ -54,7 +54,7 @@ typedef struct{
 // 定义命令函数
 ******************************************************************************/
 /*dir:路径  cmd:命令调用时名称  f:命令函数 info:命令说明*/
-#if MSHELL_USING_DIR==1
+#if MSHELL_USING_DIR>0
 #define Export(dir,cmd,f,info) Mshell_Cmd const MshellCmd_##cmd msh_used mshsection(#dir) = \
        {(char*)#dir,(char*)#cmd,(char*)info,(syscall_func)&f};
 #else 
@@ -65,7 +65,7 @@ typedef struct{
 /******************************************************************************
 // 目录支持
 ******************************************************************************/
-#if MSHELL_USING_DIR == 1
+#if MSHELL_USING_DIR>0
 
 /*路径控制*/
 typedef struct{
@@ -87,11 +87,8 @@ typedef struct{
 	(Mshell_Cmd*)&name##$$Base, \
 	(Mshell_Cmd*)&name##$$Limit \
 	} ;
-
-
-
-
-
+#else
+#define Export_Dir(dir,name,grade)
 #endif
 
 			 
