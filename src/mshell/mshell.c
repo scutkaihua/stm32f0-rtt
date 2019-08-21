@@ -3,7 +3,7 @@
 #include "mshell.h"
 #include "string.h"
 
-extern int finsh_run_line_first(char*line);
+extern int  mshell_run_line_first(char*line);
 extern void mshell_cmd_call(char*line);
 /******************************************************************************
 // mshell :ºÚµ•µ˜ ‘÷’∂À
@@ -238,7 +238,7 @@ void mshell(char ch)
 		if (ch == '\r' || ch == '\n')
 		{
 			int result = 0;
-			  if((result=finsh_run_line_first((char*)line))==0)
+			  if( (result = mshell_run_line_first((char*)line)) ==0 )
 					mshell_cmd_call((char*)line);
 			  if(echo_mode)
 					mshell_printf("\n");

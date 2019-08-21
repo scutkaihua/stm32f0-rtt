@@ -1,24 +1,33 @@
 
+/******************************************************************************
+	mshell_cmd.c
+	常用命令实现
+	1.ls   :列表命令
+	2.cd   :更改路径
+	3.ver  :当前版本
+	4.cls  :清屏
+	5.login:登录
+	6.logout:登出
+******************************************************************************/
 #include "mshell.h"
 #include "string.h"
 #include "stdio.h"
-/*************************************************************************
-*			通用命令
-**************************************************************************/
-extern char mshell_dir[];
-extern long list_dir(int g,char*sh_dir,char*indir,char*dir);
-extern char*dir_parse(char*sdir,char*dir,char*out);
 
 extern int mshell_grade(void);
 
 Export_DIR("/",root,0);
-
-/*列表当前目录，列表所有变量*/
-static long list(char*indir)
+/*************************************************************************
+*			ls :列表命令
+* indir  :目录
+**************************************************************************/
+static int list(char*indir)
 {
 	#if MSHELL_USING_DIR>0
-  char dir[MSHELL_DIR_MAX] = {0};
-	return list_dir(mshell_grade(),mshell_dir,indir,dir);
+		extern char mshell_dir[];
+		extern int list_dir(int g,char*sh_dir,char*indir,char*dir);
+		extern char*dir_parse(char*sdir,char*dir,char*out);
+		char dir[MSHELL_DIR_MAX] = {0};
+		return list_dir(mshell_grade(),mshell_dir,indir,dir);
 	#else 
 	extern const int MSHELL$$Base;
 	extern const int MSHELL$$Limit;
@@ -32,29 +41,38 @@ static long list(char*indir)
 		 cs++;
 	}
 	#endif
+	return 1;
 }
-
-/*版本*/
-static long ver(void)
+/*************************************************************************
+*			ver :输出版本
+**************************************************************************/
+static int ver(void)
 {
 	mshell_printf(MSHELL_VERSION);
 	return 1;
 }
-
-/*清屏*/
-static long cls(void)
+/*************************************************************************
+*			cls :清屏
+**************************************************************************/
+static int cls(void)
 {
 	mshell_printf("\033[2J");
 	return 1;
 }
-extern long cd(char*in_dir);
 Export(root,ls,list,        	  "ls 或者 ls() 列表内容")
 Export(root,ver,ver,        	  "ver 或者 ver() 版本号")
 Export(root,cls,cls,        	  "cls 或者 cls() 清屏")
-#if MSHELL_USING_DIR>0
+/*************************************************************************
+*			cd :更改目录 
+**************************************************************************/
+
+#if MSHELL_USING_DIR > 0
+extern int cd(char*in_dir);
 Export(root,cd,cd,							"cd string  或者 cd(string)")
 #endif
-
+/*************************************************************************
+*			login logout 登录登出 
+**************************************************************************/
 #if MSHELL_USING_LOGIN > 0
 extern int login(char*line);
 extern int logout(void);
@@ -62,8 +80,11 @@ Export(root,login,login,        "login xxx xxxx 登录")
 Export(root,logout,logout,      "logout 登出")
 #endif
 
-/*finsh优先运行，特殊命令*/
-int finsh_run_line_first(char*line)
+
+/*************************************************************************
+*			优先处理常用命令
+**************************************************************************/
+int mshell_run_line_first(char*line)
 {
 	if(strlen(line)==0)return 1;
 	mshell_printf("\n");

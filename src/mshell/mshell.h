@@ -23,7 +23,7 @@
 /******************************************************************************
 ******************************************************************************/
 /*命令处理函数,实际上为 long(*fn)(...),入参为省略参数，默认为NULL*/
-typedef long (*syscall_func)();
+typedef int (*syscall_func)();
 
 /*命令类型*/
 typedef struct{
@@ -45,11 +45,11 @@ typedef struct{
 ******************************************************************************/
 /*dir:路径  cmd:命令调用时名称  f:命令函数 info:命令说明*/
 #if MSHELL_USING_DIR>0
-#define Export(dir,cmd,f,info) Mshell_Cmd const MshellCmd_##cmd msh_used mshsection(#dir) = \
-       {(char*)#dir,(char*)#cmd,(char*)info,(syscall_func)&f};
+#define Export(dir,cmd,f,i) Mshell_Cmd const MshellCmd_##cmd msh_used mshsection(#dir) = \
+       {(char*)#dir,(char*)#cmd,(char*)i,(syscall_func)&f};
 #else 
-#define Export(grade,cmd,f,info) Mshell_Cmd const MshellCmd_##cmd __attribute__((section("MSHELL")))  __attribute__((used)) = \
-       {grade,(char*)#cmd,(char*)info,(syscall_func)&f};			 
+#define Export(grade,cmd,f,i) Mshell_Cmd const MshellCmd_##cmd __attribute__((section("MSHELL")))  __attribute__((used)) = \
+       {grade,(char*)#cmd,(char*)i,(syscall_func)&f};			 
 #endif
 
 /******************************************************************************
