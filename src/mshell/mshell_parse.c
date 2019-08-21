@@ -1,9 +1,12 @@
 #include "mshell.h"
 #include "string.h"
 
+extern int mshell_grade(void);
+
+#if MSHELL_USING_DIR>0
 extern char mshell_dir[];
 extern char*dir_parse(char*sdir,char*dir,char*out);
-extern int finsh_grade;
+#endif
 
 #define is_number(ch)    (ch>='0'&&ch<='9')
 #define is_hex(ch)       (is_number(ch)||(ch>='a'&&ch<='f')||(ch>='A'&&ch<='F'))
@@ -61,6 +64,7 @@ int mshell_input_arg_parse(char*line)
 	memset(&token,0,sizeof(token));
 	memset(args,0,sizeof(args));
 	token.data=(char*)args[0];
+	if(line==NULL)return 0;
 	while( (ch=*line++)!='\0')
 	{
 		/*参数形式("xxxxxx(,",12345, 5678,"123213",0x123)*/
@@ -86,12 +90,12 @@ int mshell_input_arg_parse(char*line)
 			case 10:
 			{
 				if(ch==' ')continue;
-				token.offset++;
 				if(ch=='-'){token.sign=-1;continue;}
-				if(ch=='0'&&token.offset>=1){token.no=11; continue;}
+				token.offset++;
+				if(ch=='0'&& token.offset==1){token.no=11; continue;}
 				if(token.no==11)
 				{
-					if(token.sign==-1)goto MSHELL_PARSE_ARG_ERROR;
+					//if(token.sign==-1)goto MSHELL_PARSE_ARG_ERROR;
 					switch(ch)
 					{
 						case 'x':case 'X':token.no = 16;continue;
@@ -143,7 +147,7 @@ int mshell_input_arg_parse(char*line)
 				switch(ch)
 				{
 					case 'a':ch='\a';break;case 'b':ch='\b';break;case 't':ch='\t';break;case 'n':ch='\n';break;
-					case 'v':ch='\v';break;case 'f':ch='\f';break;case 'r':ch='\r';break;case 'e':ch='\e';break;
+					case 'v':ch='\v';break;case 'f':ch='\f';break;case 'r':ch='\r';break;case 'e':ch=27  ;break;
 					case '0':ch='\0';break;case '"':ch='"' ;break;case '\\':ch='\\';break;case '?':ch='\?';break;
 					case '\'':ch='\'';break;case 'x':{token.no=token.value=0;token.step=5;continue;}
 					default:
@@ -183,7 +187,6 @@ int mshell_input_arg_parse(char*line)
 			}
 			default:goto MSHELL_PARSE_ARG_ERROR;
 		}
-		continue;
   }
 	MSHELL_PARSE_ARG_ERROR://参数解析错误
 	memset(&token,0,sizeof(token));
@@ -234,6 +237,7 @@ Mshell_Cmd*mshell_cmd_get(char*dir,char*name,int g)
 				return NULL;//无权访问
 			}
 		}
+		cs++;
 	}
 	return NULL;
 #endif
@@ -241,65 +245,61 @@ Mshell_Cmd*mshell_cmd_get(char*dir,char*name,int g)
 
 /******************************************************************************
 // 调用函数
+* line :命令行
 ******************************************************************************/
-
-
-long mshell_cmd_call(char*line)
+void mshell_cmd_call(char*line)
 {
-	char*out=NULL;
-	char*p=NULL;
-	char*n=strchr(line,'(');
-	char name[MSHELL_CMD_SIZE]={0};
-	int a = 0;
-	Mshell_Cmd*cmd;
-	
+	char*out=NULL;                 //命令的最终路径
+	char*p=NULL;                   //命令名称字符串
+	char*n=strchr(line,'(');       //参数开始的地方
+	char name[MSHELL_CMD_SIZE]={0};//实际命令名称
+	int a = 0;                     //参数个数
+	Mshell_Cmd*cmd;                //命令信息
+		
 	//解析当前路径
 #if MSHELL_USING_DIR>0
 	char dir[MSHELL_DIR_MAX] = {0};
-	p=strrchr(line,'\/');
-	
-	if(p!=NULL&&p<n){
-		*p=0;p++;
-		out = dir_parse(mshell_dir,line,dir);
+	extern char* dir_search_before(char*line,char s,char e);
+	p=dir_search_before(line,'/','(');//查找'('前的'/'
+	if( (p!=NULL && ((n==NULL)||((n!=NULL)&&(p<n))))) //'/'必须在'('之前
+	{
+		char indir[MSHELL_DIR_MAX] = {0};
+	  memcpy(indir,line,p-line);
+		p++;                    //前面的是路径,后面的是名称
+		out = dir_parse(mshell_dir,indir,dir);//合成当前路径
 		if(out == NULL){
-			mshell_printf("Dir error.");
-			return -1;
+			mshell_printf("dir inexist.");
+			return;
 		}
 	}else{
-		p = line;
-		out = dir_parse(mshell_dir,"./",dir);
+		p = line;                    //没有路径
+		out = dir_parse(mshell_dir,"./",dir);//使用当前路径
 	}
-	
 #else
-	p=line;
+	p=line;//不支持路径时，line就是命令
 #endif
 	
-	//解析名字
+	//搜索命令信息
 	memcpy(name,p,(n==NULL)?strlen(p):(n-p));
-  cmd = mshell_cmd_get(out,name,finsh_grade);
-	if(cmd==NULL){
-		mshell_printf("No such cmd.");
-		return -1;
-	}
+  cmd = mshell_cmd_get(out,name,mshell_grade());
+	if(cmd==NULL){mshell_printf("No such cmd.");return;}
 	
 	//解析参数,调用命令
-	//mshell_printf("\n");
-	if(n==NULL)return cmd->func(0);
-	else{
-		a = mshell_input_arg_parse(n);
-		switch(a)
-		{
-			case 0:return cmd->func();
-			case 1:return cmd->func(args[0]);
-			case 2:return cmd->func(args[0],args[1]);
-			case 3:return cmd->func(args[0],args[1],args[2]);
-			case 4:return cmd->func(args[0],args[1],args[2],args[3]);
-			case 5:return cmd->func(args[0],args[1],args[2],args[3],args[4]);
-			case 6:return cmd->func(args[0],args[1],args[2],args[3],args[4],args[5]);
+	a = mshell_input_arg_parse(n);
+	switch(a)
+	{
+			case 0:a= cmd->func();break;
+			case 1:a= cmd->func(args[0]);break;
+			case 2:a= cmd->func(args[0],args[1]);break;
+			case 3:a= cmd->func(args[0],args[1],args[2]);break;
+			case 4:a= cmd->func(args[0],args[1],args[2],args[3]);break;
+			case 5:a= cmd->func(args[0],args[1],args[2],args[3],args[4]);break;
+			case 6:a= cmd->func(args[0],args[1],args[2],args[3],args[4],args[5]);break;
 			default:
 				if(a==-1)mshell_printf("args error");
-			  return -1;
-		}
+			  return;
 	}
-	return -1;
+	mshell_printf("\n\t%d,%08x",a,a);
+	return;
 }
+

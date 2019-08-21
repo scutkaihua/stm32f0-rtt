@@ -1,12 +1,26 @@
 #include "string.h"
 #include "mshell.h"
 
+extern int mshell_grade(void);
 
 #if MSHELL_USING_DIR>0
 
 /*当前目录*/
-char mshell_dir[MSHELL_DIR_MAX] = {'\/',0};
-
+char mshell_dir[MSHELL_DIR_MAX] = {'/',0};
+/******************************************************************************
+// 查找 '(' 之前的 '/'
+******************************************************************************/
+char* dir_search_before(char*line,char s,char e)
+{
+	char*get=NULL;
+	while(*line!=0)
+	{
+		if(*line==s)get= line;
+		else if(*line==e)return get;
+		line++;
+	}
+	return get;
+}
 /******************************************************************************
 // 
 ******************************************************************************/
@@ -18,12 +32,12 @@ char*dir_parse(char*sdir,char*dir,char*out)
 		int size = strlen(dir);
 		memcpy(out,sdir,strlen(sdir));
 		if(out[strlen(out)-1]== '>')out[strlen(out)-1]=0;
-		if(out[strlen(out)-1]!= '\/'){out[strlen(out)]='\/';}
+		if(out[strlen(out)-1]!= '/'){out[strlen(out)]='/';}
 
-		if(dir[0]=='\/'){
+		if(dir[0]=='/'){
 			
 			//截取前面目录
-			char*p = strchr(dir+1,'\/');
+			char*p = strchr(dir+1,'/');
 			if(p==0){
 				memcpy(out,dir,strlen(dir)); 
 				out[strlen(dir)]=0;
@@ -47,8 +61,8 @@ char*dir_parse(char*sdir,char*dir,char*out)
 					{
 						char *p =NULL;
 						//上一级
-						if(out[strlen(out)-1] == '\/')out[strlen(out)-1] = 0;
-						if((p = strrchr(out,'\/'))!=0){
+						if(out[strlen(out)-1] == '/')out[strlen(out)-1] = 0;
+						if((p = strrchr(out,'/'))!=0){
 							dir+=2;size-=2;
 							p[0] = 0;
 							continue;
@@ -62,8 +76,8 @@ char*dir_parse(char*sdir,char*dir,char*out)
 					}
 					break;
 					
-				case '\/':
-					if( out[strlen(out)-1] == '\/'){
+				case '/':
+					if( out[strlen(out)-1] == '/'){
 						dir++;
 						size--;
 						break;
@@ -76,7 +90,7 @@ char*dir_parse(char*sdir,char*dir,char*out)
 			}
 		}
 		
-		if( out[strlen(out)-1] == '\/')out[strlen(out)-1] = 0;
+		if( out[strlen(out)-1] == '/')out[strlen(out)-1] = 0;
 		if( out[0]==0 ){out[0]='/';out[1]=0;}
 		return out;
 	}
@@ -85,9 +99,8 @@ char*dir_parse(char*sdir,char*dir,char*out)
 /******************************************************************************
 // 命令: 列表目录
 ******************************************************************************/
-long list_dir(int g,char*sh_dir,char*indir,char*dir)
+int list_dir(int g,char*sh_dir,char*indir,char*dir)
 {
-	extern int finsh_grade;
 	extern const int FSymDir$$Base;
 	extern const int FSymDir$$Limit;
 	Mshell_Dir*dirs = (Mshell_Dir*)&FSymDir$$Base;
@@ -101,7 +114,7 @@ long list_dir(int g,char*sh_dir,char*indir,char*dir)
 		char* p = dir_parse(dir,indir,dir);
 		if(p == NULL)return -1;
 	}
-  if(dir[0]==0){dir[0]='\/';dir[1] = 0;}
+  if(dir[0]==0){dir[0]='/';dir[1] = 0;}
 	mshell_printf("Dir :%s\n",dir);
 	mshell_printf("-- 命令------------ 描述------------------");
 //	mshell_printf("--Global List:\n");
@@ -121,8 +134,8 @@ long list_dir(int g,char*sh_dir,char*indir,char*dir)
 			//目录
 			if( (memcmp(dirs->dir,dir,strlen(dir))==0) && (g>=dirs->grade) ){
 				char*pdir = (char*)(&dirs->dir[strlen(dir)]);
-				if( pdir[0] == '\/')pdir++;
-				if( strchr(pdir,'\/')==0)
+				if( pdir[0] == '/')pdir++;
+				if( strchr(pdir,'/')==0)
 					{
 						mshell_printf("\n%-16s -- %s",pdir, "目录");
 					}
@@ -150,11 +163,11 @@ Mshell_Dir*is_dir(char*dir){
 	}	
 	return NULL;
 }
-long cd(char*in_dir)
+int cd(char*in_dir)
 {
 	char dir[MSHELL_DIR_MAX] = {0};
 	char*out = dir_parse(mshell_dir,(in_dir==NULL)?("./"):(in_dir),dir);
-  if(dir[0]==0){memset(dir,0,sizeof(dir));dir[0]='\/';}
+  if(dir[0]==0){memset(dir,0,sizeof(dir));dir[0]='/';}
 	if(out != NULL)
 	{	
 		if( is_dir(dir) != NULL)

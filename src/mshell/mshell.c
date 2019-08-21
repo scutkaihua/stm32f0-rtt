@@ -1,6 +1,10 @@
 
 #include "mshell_config.h"
 #include "mshell.h"
+#include "string.h"
+
+extern int finsh_run_line_first(char*line);
+extern void mshell_cmd_call(char*line);
 /******************************************************************************
 // mshell :简单调试终端
 //       1.只支持命令调用，不支持变量调用
@@ -22,13 +26,7 @@ static U8 line_curpos;          //光标位置
 #ifdef MSHELL_USING_ECHO        //回显
 static U8 echo_mode;            //echo 模式
 #endif
-/******************************************************************************
-// 解析入参
-******************************************************************************/
-static void mshell_parameters_parse(void)
-{
 
-}
 /******************************************************************************
 // 历史记录 -1:上一条   0:保存当前命令   1:下一条
 // return :1:return  0 continue
@@ -93,18 +91,43 @@ static void mshell_history(signed char func)
 	}
 	//显示命令
 	memcpy(line, &cmd_history[current_history][0],MSHELL_CMD_SIZE);
-	line_curpos = line_position = strlen(line);
+	line_curpos = line_position = strlen((const char*)line);
   mshell_printf("\033[2K\r");
   mshell_printf("%s%s", MSHELL_PROMPT,line);
 }
 #endif
 
 /******************************************************************************
-// 
+	初始化
 ******************************************************************************/
-void mshell_init(void);
+static void mshell_init(void)
+{
+		stat=WAIT_NORMAL;            //输入状态
+		memset(line,0,sizeof(line)); //命令缓存
+		line_position=0;             //接收位置
+		line_curpos=0;               //光标位置
+#ifdef MSHELL_USING_ECHO         //回显
+	  echo_mode=1;
+#else
+		echo_mode=0;
+#endif
+	
+#if MSHELL_USING_HISTORY>0
+	current_history = history_count =0;
+  memset(cmd_history,0,sizeof(cmd_history));
+#endif
+}
+
+/******************************************************************************
+	处理输入 ch
+******************************************************************************/
 void mshell(char ch)
 {
+		#if MSHELL_USING_LOGIN > 0
+				void login_input_pull(void);
+				login_input_pull();//有输入时，登录刷新
+	  #endif
+	
 		if(stat==NOT_INITED)
 			mshell_init();
 		/*========================================
@@ -138,7 +161,7 @@ void mshell(char ch)
 				}
 				else if (ch == 0x42) /* down key */
 				{
-					#ifdef MSHELL_USING_HISTORY
+					#if MSHELL_USING_HISTORY > 0
 							mshell_history(1);
 					#endif
 						return;
@@ -194,7 +217,7 @@ void mshell(char ch)
 				if (line_position > line_curpos)
 				{
 						int i;
-						rt_memmove(&line[line_curpos],&line[line_curpos + 1],line_position - line_curpos);
+						memmove(&line[line_curpos],&line[line_curpos + 1],line_position - line_curpos);
 						line[line_position] = 0;
 						mshell_printf("\b%s  \b", &line[line_curpos]);
 						/* move the cursor to the origin position */
@@ -206,7 +229,7 @@ void mshell(char ch)
 						mshell_printf("\b \b");
 						line[line_position] = 0;
 				}
-				return;
+				goto SHELL_INPUT_END;
 		}
 
 		/*========================================
@@ -214,17 +237,22 @@ void mshell(char ch)
 		==========================================*/
 		if (ch == '\r' || ch == '\n')
 		{
-				int result = 0;
-				#ifdef MSHELL_USING_HISTORY
-									 mshell_history(0);//保存历史记录
-				#endif
-				/*解析参数*/
-				/*查找命令，并运行*/
-			  if(finsh_run_line_first(line)==0)
-			    mshell_cmd_call(line);
-			  if (echo_mode)
-						mshell_printf("\n");
-				if(result==0)mshell_printf(MSHELL_PROMPT);
+			int result = 0;
+			  if((result=finsh_run_line_first((char*)line))==0)
+					mshell_cmd_call((char*)line);
+			  if(echo_mode)
+					mshell_printf("\n");
+				
+				#if MSHELL_USING_HISTORY > 0
+					#if MSHELL_USING_LOGIN
+							if(result!=2)		
+								mshell_history(0);//保存历史记录								
+					#else
+						mshell_history(0);//保存历史记录
+					#endif
+			  #endif				
+					
+				mshell_printf(MSHELL_PROMPT);
 				memset(line, 0, sizeof(line));
 				line_curpos = line_position = 0;
 				return;
@@ -238,7 +266,7 @@ void mshell(char ch)
 		if (line_curpos < line_position)//在中间插入字符
 		{
 				int i;
-				rt_memmove(&line[line_curpos + 1],&line[line_curpos],line_position - line_curpos);
+				memmove(&line[line_curpos + 1],&line[line_curpos],line_position - line_curpos);
 				line[line_curpos] = ch;
 				if (echo_mode)
 						rt_kprintf("%s", &line[line_curpos]);
@@ -255,21 +283,15 @@ void mshell(char ch)
 		}
 		line_position ++;
 		line_curpos++;
-}
-void mshell_init(void)
-{
-		stat=0;                      //输入状态
-		memset(line,0,sizeof(line)); //命令缓存
-		line_position=0;             //接收位置
-		line_curpos=0;               //光标位置
-#ifdef MSHELL_USING_ECHO         //回显
-	  echo_mode=1;
-#else
-		echo_mode=0;
-#endif
-	
-#if MSHELL_USING_HISTORY>0
-	current_history = history_count =0;
-  memset(cmd_history,0,sizeof(cmd_history));
-#endif
+		
+		SHELL_INPUT_END:
+		/*========================================
+		* 如果是login输入的，使用密码输出
+		==========================================*/
+		#if MSHELL_USING_LOGIN > 0
+		{
+			char login_input_replace(char*line);
+			login_input_replace((char*)line);
+		}
+		#endif
 }

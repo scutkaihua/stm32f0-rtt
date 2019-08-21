@@ -40,16 +40,6 @@ typedef struct{
 }Mshell_Cmd;
 
 
-
-#ifdef MSHELL_USING_LOGIN
-/*登录控制*/
-typedef struct{
-
-
-}Mshell_Login;
-#endif
-
-
 /******************************************************************************
 // 定义命令函数
 ******************************************************************************/
@@ -88,7 +78,7 @@ typedef struct{
 	(Mshell_Cmd*)&name##$$Limit \
 	} ;
 #else
-#define Export_Dir(dir,name,grade)
+#define Export_DIR(dir,name,grade)  static const int name = grade;
 #endif
 
 			 
