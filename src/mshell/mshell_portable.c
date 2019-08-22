@@ -108,8 +108,6 @@ void mshell_printf(const char*fmt,...)
         length = RT_CONSOLEBUF_SIZE - 1;
 		enable_485_tx();
     ld_uart_send(2,rt_log_buf,length);
-		while(ld_uart_is_tx_empty(2)==FALSE);
-		delayus(60);
-		enable_485_rx();
+		while(is_enable_485_rx()==FALSE);
     va_end(args);
 }

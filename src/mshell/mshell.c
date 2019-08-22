@@ -117,7 +117,7 @@ static void mshell_history(signed char func)
 	//显示命令
 	memcpy(line, &cmd_history[current_history][0],MSHELL_CMD_SIZE);
 	line_curpos = line_position = strlen((const char*)line);
-  mshell_printf("\033[2K\r");               //删除本行显示	
+  mshell_printf("\033[2K\n\033[1A");//删除本行显示	
 	mshell_prompt();//前导
   mshell_printf((char*)line);//重新显示本行
 }

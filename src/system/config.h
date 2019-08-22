@@ -26,6 +26,7 @@ typedef enum{
 #define disable_485_tx()  ld_gpio_set(2,0)
 #define enable_485_rx()   disable_485_tx()
 #define disable_485_rx()  enable_485_tx()
+#define is_enable_485_rx() (ld_gpio_get(2)==0)
 
 //<s> π”√”≤º˛≈‰÷√
 #define USING_HARDWARE_CONFIG  "25-50-NAS-V5.h"
