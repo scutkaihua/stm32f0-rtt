@@ -67,6 +67,23 @@ U8 ld_gpio_get(U32 index)
    return cpu_gpio_map_get(gpio_map,index);
 }
 
+//设置输出/输入
+void ld_gpio_set_io(U32 index,BOOL out,U8 value)
+{
+	index--;
+	if(index>=gpio_number)return;	
+	if(out){
+				cpu_gpio_cfg(gpio_map[index].xPort,gpio_map[index].xPin,
+				0x01,0x00,0x01,
+				value,gpio_map[index].xSpeed);
+	}else{
+				cpu_gpio_cfg(gpio_map[index].xPort,gpio_map[index].xPin,
+				0x00,0x01,0x00,
+				value,gpio_map[index].xSpeed);	
+	}
+}
+
+
 /*只对595有效*/
 U8 ld_gpio_refresh(void)
 {

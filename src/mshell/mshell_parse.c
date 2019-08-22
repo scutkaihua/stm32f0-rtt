@@ -53,7 +53,7 @@ int is_jinzhi(char ch,char jinzhi)
 {
 	switch(jinzhi)
 	{
-		case 2:if(ch!='0'&& ch!='1')return -1;else return ch-'1';//2进制
+		case 2:if(ch!='0'&& ch!='1')return -1;else return ch-'0';//2进制
 		case 8:if(ch <'0'&& ch >'7')return -1;else return ch-'0';//8进制
 		case 16:if(!is_hex(ch))return 1;else return hex_bin(ch);  //16进制
 		case 10:                                           //10进制
@@ -98,21 +98,23 @@ static int mshell_input_arg_parse(char*line)
 		/*参数形式("xxxxxx(,",12345, 5678,"123213",0x123)*/
 		switch(token.step)
 		{
-			case 0:if(ch=='('){token.step++;continue;}//等待'('
+			/*-----------等待'('------------*/
+			case 0:if(ch=='('){token.step++;continue;}
 			case 1:
 				if(ch ==' ')continue;
 				token.step++;	
-			case 2://参数
+			/*-----------参数开始-----------*/
+			case 2:
 				if(ch==')')return token.line;                         //参数结束
 				if(ch==','&&token.line==0)goto MSHELL_PARSE_ARG_ERROR;//第一个之前参数不能有','
-				if(ch==',' || ch==' ')continue;
-				if(ch=='"'){token.offset=0; token.step=3;continue;}	                  //字符串开始	
-				if(!is_number(ch)&&ch!='-')
+				if(ch==',' || ch==' ')continue;                       //','' '不处理
+				if(ch=='"'){token.offset=0; token.step=3;continue;}	  //字符串开始	
+				if(!is_number(ch)&&ch!='-')                           //非数字，非符号，解析错误
 					goto MSHELL_PARSE_ARG_ERROR;
-				token.step=10;
-				token.value=0;
-				token.sign=1;
-				token.no=10;//默认10进制
+				token.step=10;//进入数字转换
+				token.value=0;//缓存值清0
+				token.sign=1; //默认符号+
+				token.no=10;  //默认10进制
 			/*-----------数字转换-----------*/
 			//16:0x  8:0o 2:0b
 			case 10:
@@ -123,27 +125,26 @@ static int mshell_input_arg_parse(char*line)
 				if(ch=='0'&& token.offset==1){token.no=11; continue;}
 				if(token.no==11)
 				{
-					//if(token.sign==-1)goto MSHELL_PARSE_ARG_ERROR;
+					//if(token.sign==-1)goto MSHELL_PARSE_ARG_ERROR;//有且只有一个'-'
 					switch(ch)
 					{
-						case 'x':case 'X':token.no = 16;continue;
-						case 'b':case 'B':token.no = 2;continue;
-						case 'O':case 'o':token.no = 8;continue;
-						default:goto MSHELL_PARSE_ARG_ERROR;
+						case 'x':case 'X':token.no = 16;continue;//16进制
+						case 'b':case 'B':token.no = 2;continue; //2进制
+						case 'O':case 'o':token.no = 8;continue; //8进制
+						default:goto MSHELL_PARSE_ARG_ERROR;     //其它进制
 					}
 				}
 				//本参数结束
 				if(ch==')' || ch==',')
 				{
-					token.arg[token.line].data[0] = token.value*token.sign;
-					token.arg[token.line].value=(void*)token.arg[token.line].data[0];
-					token.line++;
-					if(ch==','){token.step=2;continue;}
-					return token.line;
+					token.arg[token.line].value=(void*)(token.value*token.sign);//保存数值
+					token.line++;                                               //下一个
+					if(ch==','){token.step=2;continue;}                         //继续下一个参数 
+					return token.line;                                          //')'结尾，表示结束,返回参数个数
 				}
 				//参数是否格式错
 				{
-					int result = is_jinzhi(ch,token.no);
+					int result = is_jinzhi(ch,token.no);                    
 					if( result <0)
 					goto MSHELL_PARSE_ARG_ERROR;
 					ch = (char)result;
@@ -156,17 +157,17 @@ static int mshell_input_arg_parse(char*line)
 			/*-----------字符串-------------*/
 			case 3:
 			{
-				if(ch=='\\'){token.step=4;continue;}                           //转义开始
-				if(ch=='"'){
-					token.arg[token.line].value =(void*)token.arg[token.line].data;
-					token.offset=0;
-					token.line++;
-					token.data=(char*)token.arg[token.line].data;
-					token.step=2;
+				if(ch=='\\'){token.step=4;continue;}                              //转义开始
+				if(ch=='"'){                                                      //字符串结束
+					token.arg[token.line].value =(void*)token.arg[token.line].data; //保存字符串地址
+					token.offset=0;                                                 //清0偏移
+					token.line++;                                                   //下一个
+					token.data=(char*)token.arg[token.line].data;                   //char*缓冲
+					token.step=2;                                                   //继续下一个参数的读入
 					continue;
-				}//下一行
+				}
 				else
-					token.data[token.offset++]=ch;
+					token.data[token.offset++]=ch;                                  //保存当前字符
 				continue;
 			}
 			case 4:
@@ -181,37 +182,37 @@ static int mshell_input_arg_parse(char*line)
 					case '0':ch='\0';break;case '"':ch='"' ;break;case '\\':ch='\\';break;case '?':ch='\?';break;
 					case '\'':ch='\'';break;case 'x':{token.no=token.value=0;token.step=5;continue;}
 					default:
-						if(is_8hex(ch))goto MSHELL_PARSE_8;
+						if(is_8hex(ch))goto MSHELL_PARSE_8;//8进制 xxx
 						goto MSHELL_PARSE_ARG_ERROR;
 				}
-				token.data[token.offset++]=ch;
+				token.data[token.offset++]=ch;//保存当前转换后的数值
 				token.step=3;continue;
 			}
 			case 5://16进制转码
 			{
 				if(!is_hex(ch))goto MSHELL_PARSE_ARG_ERROR;
-				token.value<<=4;token.value+=hex_bin(ch);
+				token.value<<=4;token.value+=hex_bin(ch);//计算数值
 				token.no++;
-				if(token.no==2)
+				if(token.no==2)//xNN,只有两个16进制码
 				{
-					token.data[token.offset++]=(char)token.value;
+					token.data[token.offset++]=(char)token.value;//保存当前值
 					token.no=token.value=0;
-					token.step=3;
+					token.step=3;//继续字符串的接收
 				}
 				continue;
 			}
 			MSHELL_PARSE_8:
-			token.no=token.value=0;token.step=6;
+			token.no=token.value=0;token.step=6;//缓存清0，跳到6
 			case 6://8进制转码
 			{
 				if(!is_8hex(ch))goto MSHELL_PARSE_ARG_ERROR;
-				token.value<<=3;token.value+=ch-'0';
+				token.value<<=3;token.value+=ch-'0';//计算数值
 				token.no++;
-				if(token.no==3)
+				if(token.no==3)//\xxx 8进制只有3个字符
 				{
 					token.data[token.offset++]=(char)token.value;
 					token.no=token.value=0;
-					token.step=3;
+					token.step=3;//继续字符串的接收
 				}
 				continue;
 			}
@@ -230,6 +231,9 @@ static int mshell_input_arg_parse(char*line)
 * name:命令字符串
 * g   :命令权限
 * return:命令信息
+* note:
+   1.支持目录时   ,命令以 目录为标识，集中放在一个目录下
+   2.不支持目录时 ,命令统一放在一起
 ******************************************************************************/
 static Mshell_Cmd*mshell_cmd_get(char*dir,char*name,int g)
 {
@@ -238,13 +242,14 @@ static Mshell_Cmd*mshell_cmd_get(char*dir,char*name,int g)
 	extern const int FSymDir$$Limit;
 	Mshell_Dir*dirs = (Mshell_Dir*)&FSymDir$$Base;
 	Mshell_Dir*dire = (Mshell_Dir*)&FSymDir$$Limit;
-	//当前路径命令
+	/*--------------当前路径命令--------------------------------*/
 	while(dirs != dire)
 	{
-		if( (strcmp( dir, dirs->dir ) == 0) && (g>=dirs->grade) )
+		if( (strcmp( dir, dirs->dir ) == 0) && (g>=dirs->grade) )//是否当前目录下,等级是否足够
 		{
-			Mshell_Cmd*cs = dirs->start;
-			Mshell_Cmd*ce = dirs->end;
+			Mshell_Cmd*cs = dirs->start;//该目录下命令集合开始
+			Mshell_Cmd*ce = dirs->end;  //该目录下命令集合结束
+			/*遍历该目录下所有命令*/
 			while(cs != ce){
 				if(strcmp(name,cs->name)==0)
 				{
@@ -259,8 +264,9 @@ static Mshell_Cmd*mshell_cmd_get(char*dir,char*name,int g)
 #else
 	extern const int MSHELL$$Base;
 	extern const int MSHELL$$Limit;
-	Mshell_Cmd*cs = (Mshell_Cmd*)&MSHELL$$Base;
-	Mshell_Cmd*ce = (Mshell_Cmd*)&MSHELL$$Limit;
+	/*--------------遍历所有命令查找------------------------------*/
+	Mshell_Cmd*cs = (Mshell_Cmd*)&MSHELL$$Base;  //命令集合开始
+	Mshell_Cmd*ce = (Mshell_Cmd*)&MSHELL$$Limit; //命令集合结束
   while(cs != ce)
 	{
 		if(strcmp(name,cs->name)==0)
@@ -299,15 +305,15 @@ void mshell_cmd_call(char*line)
 	if( (p!=NULL && ((n==NULL)||((n!=NULL)&&(p<n))))) //'/'必须在'('之前
 	{
 		char indir[MSHELL_DIR_MAX] = {0};
-	  memcpy(indir,line,p-line);
-		p++;                    //前面的是路径,后面的是名称
-		out = dir_parse(mshell_dir,indir,dir);//合成当前路径
+	  memcpy(indir,line,p-line); //indir 是输入的路径
+		p++;                       //前面的是路径,后面的是名称
+		out = dir_parse(mshell_dir,indir,dir);//合成当前路径,dir存放当前路径
 		if(out == NULL){
 			mshell_printf("dir inexist.");
 			return;
 		}
 	}else{
-		p = line;                    //没有路径
+		p = line;                    //输入路径为空，使用当前路径
 		out = dir_parse(mshell_dir,"./",dir);//使用当前路径
 	}
 #else
@@ -315,12 +321,12 @@ void mshell_cmd_call(char*line)
 #endif
 	
 	/*-------------查找命令----------------------------------------------*/
-	memcpy(name,p,(n==NULL)?strlen(p):(n-p));
-  cmd = mshell_cmd_get(out,name,mshell_grade());
-	if(cmd==NULL){mshell_printf("No such cmd.");return;}
+	memcpy(name,p,(n==NULL)?strlen(p):(n-p));           //copy name
+  cmd = mshell_cmd_get(out,name,mshell_grade());      //out为命令路径
+	if(cmd==NULL){mshell_printf("No such cmd.");return;}//命令为空
 	
 	/*-------------解析参数----------------------------------------------*/
-	a = mshell_input_arg_parse(n);
+	a = mshell_input_arg_parse(n);//返回参数个数
 	/*-------------调用命令----------------------------------------------*/
 	switch(a)
 	{

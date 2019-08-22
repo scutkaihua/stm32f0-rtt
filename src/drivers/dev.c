@@ -1,19 +1,19 @@
 
+
+#include "includes.h"
 #include "stm32f0xx_rcc.h"
+/*===================================================
+                私有
+====================================================*/
+#define APPLICATION_ADDRESS     ((U32)(BOOT_LOADER_SIZE +0x08000000))
 
-
-extern const int BOOT_LOADER_SIZE;
-#define APPLICATION_ADDRESS     ((uint32_t)(BOOT_LOADER_SIZE +0x08000000))
-
-
-/*设置iap*/
 void IAP_Set()
 {
    uint32_t i = 0;
       
   for(i = 0; i < 48; i++)
   {
-    *((uint32_t*)(0x20000000 + (i << 2)))=*(volatile uint32_t*)(APPLICATION_ADDRESS + (i<<2));
+    *((uint32_t*)(0x20000000 + (i << 2)))=*(volatile U32*)(APPLICATION_ADDRESS + (i<<2));
 	}
  
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE); /* Enable the SYSCFG peripheral clock*/ 
@@ -21,9 +21,26 @@ void IAP_Set()
 }	
 
 
+void ld_iwdg_init(void)
+{
+  /* Enable write access to IWDG_PR and IWDG_RLR registers */
+  IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);
+  /* IWDG counter clock: LSI/32 */
+  IWDG_SetPrescaler(IWDG_Prescaler_64);//6.4MS
+  IWDG_SetReload(3750);//3000       3125*64/40=5000ms
+  /* Reload IWDG counter */
+  IWDG_ReloadCounter();
+  /* Enable IWDG (the LSI oscillator will be enabled by hardware) */
+  IWDG_Enable();
+}	
+#define KR_KEY_RELOAD    ((uint16_t)0xAAAA)
+void ld_iwdg_reload(void)
+{
+	IWDG->KR = KR_KEY_RELOAD;
+}
 
-/*系统时钟*/
-void ld_system_clock(unsigned char SK)
+
+void MSetSysClock(unsigned char SK)
 {
   __IO uint32_t StartUpCounter = 0, HSEStatus = 0;
   /* Set HSION bit */
@@ -97,4 +114,32 @@ void ld_system_clock(unsigned char SK)
   {
   }
  
+}
+
+/*===================================================
+                底层初始化
+====================================================*/
+void ld_dev_init(void)
+{
+	MSetSysClock(16);
+	//bootloader下重定向向量表
+	#if USING_BOOT_LOADER >0
+	IAP_Set();
+	#endif
+	
+	//gpio
+	ld_gpio_init();
+	
+	//uart
+	ld_uart_init();
+	
+	//看门狗
+	#if ENABLE_IWDG>0
+	ld_iwdg_init();
+	#endif
+	//外部中断
+	ld_exti_init();
+
+	//定时器
+	ld_timer3_init();
 }

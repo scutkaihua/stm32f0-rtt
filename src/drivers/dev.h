@@ -3,16 +3,7 @@
 #include "types.h"
 #include "time.h"
 
-/*===================================================
-                底层初始化
-====================================================*/
 void ld_dev_init(void);
-
-/*===================================================
-                系统时钟
-====================================================*/
-void ld_system_clock(unsigned char SK); //SK=8,16,48
-void ld_iap(void);                      //iap设置
 /*===================================================
                 系统运行时间ms
 ====================================================*/
@@ -21,6 +12,7 @@ extern void cpu_ms_delay(int ms);
 #define delayus(n)   cpu_us_delay(n)  //us延时
 #define delayms(n)   cpu_ms_delay(n)
 void cpu_nvic_reset(void);
+
 time_t time(time_t*t);
 /*===================================================
                 gpio
@@ -29,6 +21,7 @@ extern void ld_gpio_init(void);
 extern void ld_gpio_set(U32 index,U8 value);
 extern U8 ld_gpio_get(U32 index);
 extern U8 ld_gpio_refresh(void);
+extern void ld_gpio_set_io(U32 index,BOOL out,U8 value);
 
 extern void ld_hc595_init(void);
 extern void ld_hc595_reload(void);
@@ -56,7 +49,7 @@ int ld_uart_send(U8 xUart,U8*pBuf,int size);
 int ld_uart_read(U8 xUart,U8*pBuf,int size);
 int ld_uart_dump(U8 xUart,U8 type);//清收发缓冲:type  :bit0 :rx data    bit1 tx data
 int ld_uart_isp(U8 xUart,char*byte,U8 type);	//type: 0 接收    1发送
-
+int ld_uart_is_tx_empty(U8 xUart);//发送是否为空
 
 
 /*===================================================
@@ -117,15 +110,5 @@ void ld_timer3_init(void);
 void ld_iwdg_init(void);
 void ld_iwdg_reload(void);
 
-/*===================================================
-                充电宝命令
-====================================================*/
-typedef enum{
-	RC_READ_ID   =10,      //:读充电ID
-	RC_READ_DATA =20,      //:读数据
-	RC_UNLOCK    =30,      //:解锁05
-	RC_LOCK      =50,      //:上锁06
-	RC_UNLOCK_1HOUR =40,   //:解锁1小时07
-	RC_OUTPUT,             //:读输出标志
-}READ_TYPE_CMD;          //充电宝命令
+
 #endif

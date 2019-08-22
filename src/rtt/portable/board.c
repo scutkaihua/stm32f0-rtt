@@ -10,6 +10,7 @@
  */
 #include <rthw.h>
 #include <rtthread.h>
+#include "stm32f0xx.h"
 
 #define _SCB_BASE       (0xE000E010UL)
 #define _SYSTICK_CTRL   (*(rt_uint32_t *)(_SCB_BASE + 0x0))
@@ -92,4 +93,17 @@ void SysTick_Handler(void)
 
 	/* leave interrupt */
 	rt_interrupt_leave();
+}
+
+void board_reset()
+{
+	NVIC_SystemReset();
+}
+
+time_t time(time_t*t)
+{
+	rt_tick_t tt = rt_tick_get();
+	time_t now = tt*(1000/RT_TICK_PER_SECOND);
+	if(t!=NULL)*t=now;
+	return now;
 }

@@ -147,7 +147,7 @@
 // <h>Console Configuration
 // <c1>Using console
 //  <i>Using console
-#define RT_USING_CONSOLE
+//#define RT_USING_CONSOLE
 // </c>
 
 // <o>the buffer size of console <1-1024>
@@ -164,7 +164,7 @@
 //<h>Device
 // <c1>Using Device
 //  <i>Using Device
-#define RT_USING_DEVICE
+//#define RT_USING_DEVICE
 // </c>
 
 // <c1>Using Device Ops

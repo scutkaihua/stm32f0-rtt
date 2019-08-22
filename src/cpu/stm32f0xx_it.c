@@ -29,7 +29,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_it.h"
-#include "driver.h"
+#include "includes.h"
 /** @addtogroup STM32F0308-Discovery_Demo
   * @{
   */
@@ -100,10 +100,9 @@ void TIM3_IRQHandler(void)
 {
   if(TIM_GetITStatus(TIM3,TIM_IT_Update) != RESET) //溢出中断
 	{
-			ld_ir_timer_100us();
+		//ld_ir_timer_100us();
 		TIM_ClearITPendingBit(TIM3,TIM_IT_Update);  //清除中断标志位  
 	}
-	
 }
 
 
@@ -186,7 +185,7 @@ void USART2_IRQHandler(void)
 //		{	
 //			//process_post_synch(&thread_packet,PROCESS_EVENT_PACKET,(void*)&hpacket.p);//发送一个事件给packet任务
 //		}
-		//ld_uart_isp(2,&temp,0);
+		ld_uart_isp(2,&temp,0);
 		USART_ClearITPendingBit(pUart, USART_IT_RXNE);						
   }
 	
@@ -200,12 +199,12 @@ void USART2_IRQHandler(void)
 			else
 			{
 					USART_ITConfig(pUart, USART_IT_TXE, DISABLE);
-			}
+			}		
 	}	
 	
 	if(USART_GetFlagStatus(pUart,USART_FLAG_TC)==SET)
 	{
-		//enable_485_rx();
+		enable_485_rx();
 		USART_ClearFlag(pUart,USART_FLAG_TC);	//读SR
 	}
 	

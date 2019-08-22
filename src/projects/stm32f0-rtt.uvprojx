@@ -134,11 +134,11 @@
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
-            <DriverSelection>-1</DriverSelection>
+            <DriverSelection>4096</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3></Flash3>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -315,7 +315,7 @@
             <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
-            <OneElfS>0</OneElfS>
+            <OneElfS>1</OneElfS>
             <Strict>0</Strict>
             <EnumInt>0</EnumInt>
             <PlainCh>0</PlainCh>
@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER,STM32F030X8, RT_USING_ARM_LIBC</Define>
               <Undefine></Undefine>
-              <IncludePath>..\cpu;..\cpu\inc;..\cpu\cmsis_inc;..\rtt\include;..\rtt\portable;..\mshell;..\drivers;..\lib</IncludePath>
+              <IncludePath>..\cpu;..\cpu\inc;..\cpu\cmsis_inc;..\rtt\include;..\rtt\portable;..\mshell;..\drivers;..\lib;..\system</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -391,6 +391,33 @@
         </Group>
         <Group>
           <GroupName>system</GroupName>
+          <Files>
+            <File>
+              <FileName>system.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\system\system.c</FilePath>
+            </File>
+            <File>
+              <FileName>config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\system\config.h</FilePath>
+            </File>
+            <File>
+              <FileName>25-50-NAS-V6.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\system\25-50-NAS-V6.h</FilePath>
+            </File>
+            <File>
+              <FileName>25-50-NAS-V5.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\system\25-50-NAS-V5.h</FilePath>
+            </File>
+            <File>
+              <FileName>8-16-NAS-V21.0.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\system\8-16-NAS-V21.0.h</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>rtt/src</GroupName>
@@ -506,14 +533,9 @@
               <FilePath>..\drivers\driver_config.c</FilePath>
             </File>
             <File>
-              <FileName>driver.c</FileName>
+              <FileName>dev.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\drivers\driver.c</FilePath>
-            </File>
-            <File>
-              <FileName>systemclock.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\drivers\systemclock.c</FilePath>
+              <FilePath>..\drivers\dev.c</FilePath>
             </File>
             <File>
               <FileName>uart.c</FileName>
@@ -544,16 +566,62 @@
               <FileName>ir.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\drivers\ir.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <uGnu>2</uGnu>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>2</v6Lto>
+                    <v6WtE>2</v6WtE>
+                    <v6Rtti>2</v6Rtti>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
             <File>
               <FileName>timer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\drivers\timer.c</FilePath>
-            </File>
-            <File>
-              <FileName>watchdog.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\drivers\watchdog.c</FilePath>
             </File>
             <File>
               <FileName>74hc595.c</FileName>
@@ -566,9 +634,19 @@
           <GroupName>mshell</GroupName>
           <Files>
             <File>
-              <FileName>mshell_cmd.c</FileName>
+              <FileName>mshell.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\mshell\mshell_cmd.c</FilePath>
+              <FilePath>..\mshell\mshell.c</FilePath>
+            </File>
+            <File>
+              <FileName>mshell_dir.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mshell\mshell_dir.c</FilePath>
+            </File>
+            <File>
+              <FileName>mshell_parse.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mshell\mshell_parse.c</FilePath>
             </File>
             <File>
               <FileName>mshell_permission.c</FileName>
@@ -576,24 +654,19 @@
               <FilePath>..\mshell\mshell_permission.c</FilePath>
             </File>
             <File>
-              <FileName>mshell.c</FileName>
+              <FileName>mshell_cmd.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\mshell\mshell.c</FilePath>
-            </File>
-            <File>
-              <FileName>mshell.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\mshell\mshell.h</FilePath>
-            </File>
-            <File>
-              <FileName>mshell_config.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\mshell\mshell_config.h</FilePath>
+              <FilePath>..\mshell\mshell_cmd.c</FilePath>
             </File>
             <File>
               <FileName>mshell_portable.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\mshell\mshell_portable.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_cmd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mshell\test_cmd.c</FilePath>
             </File>
           </Files>
         </Group>

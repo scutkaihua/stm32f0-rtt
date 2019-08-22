@@ -1,17 +1,19 @@
-
-#include "mshell_config.h"
-#include "mshell.h"
-#include "string.h"
-
-extern int  mshell_run_line_first(char*line);
-extern void mshell_cmd_call(char*line);
 /******************************************************************************
 // mshell :简单调试终端
 //       1.只支持命令调用，不支持变量调用
 //       2.支持登录
 //       3.支持路径访问
 ******************************************************************************/
+#include "mshell_config.h"
+#include "mshell.h"
+#include "string.h"
 
+extern int  mshell_run_line_first(char*line);
+extern void mshell_cmd_call(char*line);
+
+/******************************************************************************
+*   本地输入数据缓存s
+******************************************************************************/
 enum input_stat
 {
 	NOT_INITED=-1,     //未初始化
@@ -26,6 +28,29 @@ static U8 line_curpos;          //光标位置
 #ifdef MSHELL_USING_ECHO        //回显
 static U8 echo_mode;            //echo 模式
 #endif
+/******************************************************************************
+	打印前导码
+******************************************************************************/
+void mshell_prompt(void)
+{
+		#if MSHELL_USING_LOGIN >0
+		extern char* login_user(void);
+		extern int   login_grade(void);
+		//用户名
+		mshell_printf("[%s(%d)",login_user(),login_grade());
+		#else
+		mshell_printf("[%s\b",MSHELL_PROMPT);
+		#endif
+		//路径
+		#if MSHELL_USING_DIR > 0
+		{
+			extern char* mshell_dir[];
+			mshell_printf(" @%s\b]> ",mshell_dir);
+		}
+		#else
+			mshell_printf("]> ");
+		#endif
+}
 
 /******************************************************************************
 // 历史记录 -1:上一条   0:保存当前命令   1:下一条
@@ -92,8 +117,9 @@ static void mshell_history(signed char func)
 	//显示命令
 	memcpy(line, &cmd_history[current_history][0],MSHELL_CMD_SIZE);
 	line_curpos = line_position = strlen((const char*)line);
-  mshell_printf("\033[2K\r");
-  mshell_printf("%s%s", MSHELL_PROMPT,line);
+  mshell_printf("\033[2K\r");               //删除本行显示	
+	mshell_prompt();//前导
+  mshell_printf((char*)line);//重新显示本行
 }
 #endif
 
@@ -116,8 +142,8 @@ static void mshell_init(void)
 	current_history = history_count =0;
   memset(cmd_history,0,sizeof(cmd_history));
 #endif
+	mshell_printf("\n==========================================\n\t欢迎使用  %s \n\tby kaihua.yang\n==========================================",MSHELL_VERSION);
 }
-
 /******************************************************************************
 	处理输入 ch
 ******************************************************************************/
@@ -193,16 +219,6 @@ void mshell(char ch)
 		==========================================*/
 		else if (ch == '\t')
 		{
-//            int i;
-//            /* move the cursor to the beginning of line */
-//            for (i = 0; i < line_curpos; i++)
-//                mshell_printf("\b");
-
-//            /* auto complete */
-//            shell_auto_complete(&line[0]);
-//            /* re-calculate position */
-//            line_curpos = line_position = strlen(line);
-
 				return;
 		}
 		/*========================================
@@ -235,7 +251,8 @@ void mshell(char ch)
 		/*========================================
 		* handle enter key :  一行结尾，处理一条命令
 		==========================================*/
-		if (ch == '\r' || ch == '\n')
+		if(ch=='\r')return;
+		if (/*ch == '\r' || */ch == '\n')
 		{
 			int result = 0;
 			  if( (result = mshell_run_line_first((char*)line)) ==0 )
@@ -251,14 +268,12 @@ void mshell(char ch)
 						mshell_history(0);//保存历史记录
 					#endif
 			  #endif				
-					
-				mshell_printf(MSHELL_PROMPT);
+				mshell_prompt();//前导
 				memset(line, 0, sizeof(line));
 				line_curpos = line_position = 0;
 				return;
 		}
 
-		
 		/*========================================
 		* 插入一个字节
 		==========================================*/
@@ -269,17 +284,17 @@ void mshell(char ch)
 				memmove(&line[line_curpos + 1],&line[line_curpos],line_position - line_curpos);
 				line[line_curpos] = ch;
 				if (echo_mode)
-						rt_kprintf("%s", &line[line_curpos]);
+						mshell_printf("%s", &line[line_curpos]);
 
 				/* move the cursor to new position */
 				for (i = line_curpos; i < line_position; i++)
-						rt_kprintf("\b");
+						mshell_printf("\b");
 		}
 		else                           //在末尾插入
 		{
 				line[line_position] = ch;
 				if (echo_mode)
-						rt_kprintf("%c", ch);
+						mshell_printf("%c", ch);
 		}
 		line_position ++;
 		line_curpos++;

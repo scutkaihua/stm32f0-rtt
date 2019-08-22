@@ -86,7 +86,6 @@ typedef struct{
 // È«¾Öº¯Êý
 ******************************************************************************/			 
 void mshell(char data);
-void mshell_init(void);
 
 #endif
 

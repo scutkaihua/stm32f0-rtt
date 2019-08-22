@@ -39,9 +39,9 @@ static int list(char*indir)
 		if(mshell_grade()>=cs->grade)
 		 mshell_printf("\n%-16s -- %s", cs->name, cs->desc);
 		 cs++;
-	}
-	#endif
+	}	
 	return 1;
+	#endif
 }
 /*************************************************************************
 *			ver :输出版本
@@ -56,10 +56,10 @@ static int ver(void)
 **************************************************************************/
 static int cls(void)
 {
-	mshell_printf("\033[2J");
+	mshell_printf("\033c[2J");
 	return 1;
 }
-Export(root,ls,list,        	  "ls 或者 ls() 列表内容")
+Export(root,ls,list,        	  "ls  或者 ls()  列表内容")
 Export(root,ver,ver,        	  "ver 或者 ver() 版本号")
 Export(root,cls,cls,        	  "cls 或者 cls() 清屏")
 /*************************************************************************

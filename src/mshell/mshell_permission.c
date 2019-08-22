@@ -4,7 +4,7 @@
 #if MSHELL_USING_LOGIN > 0
 int logout(void);
 int login(char*line);
-
+extern char mshell_dir[];
 
 /******************************************************************************
 *    权限配置(用户名，密码，等级)
@@ -15,8 +15,9 @@ const LOGIN logins[]={
 	{"debug","debug",10},//调试级别
 	{"root", "root",255},//超级管理员级别
 };
-LOGIN current_login;
-
+LOGIN current_login={NULL,NULL,0};
+char* login_user(void) {return current_login.name;}
+int   login_grade(void){return current_login.grade;}
 /******************************************************************************
 *   超时退出
 *  reset   :TRUE:登录开始计时  FALSE:只刷新  
@@ -31,7 +32,7 @@ static BOOL login_timeout(BOOL reset)
 		//判断超时
 		if( ((now/1000)+MSHELL_LOGIN_TIMEOUT)< (time(0)/1000) )
 		{
-			now=time(0);
+			now=time(0);//刷新当前时间
 			return TRUE;
 		}
 		else{
@@ -44,6 +45,7 @@ static BOOL login_timeout(BOOL reset)
 /*按键输入时，刷新登录时间，看一下是否登录超时,如果超时，就登出*/
 void login_input_pull(void)
 {
+	if(current_login.name==NULL)current_login=logins[0];//默认初始化用户为第一个用户
 	if(login_timeout(FALSE)==TRUE)
 	{
 		if(memcmp(&current_login,logins,sizeof(LOGIN))==0)return;
@@ -61,10 +63,12 @@ void login_input_replace(char*line)
 	int i=0;
 	char name[MSHELL_LOGIN_NAME_MAX]={0};char pw[MSHELL_LOGIN_PW_MAX]={0};
 	if(sscanf(line,"login %s %s",name,pw)==2){
-		mshell_printf("\33[2K\r");//清除该行
+		extern void mshell_prompt(void);//前导
+		mshell_printf("\33[3K\n\033[1A");//清除该行
 		for(;i<MSHELL_LOGIN_PW_MAX;i++)if(pw[i]!=0)pw[i]='*';
 		pw[MSHELL_LOGIN_PW_MAX-1]=0;
-		mshell_printf("%slogin %s %s",MSHELL_PROMPT,name,pw);
+		mshell_prompt();//前导
+		mshell_printf("login %s %s",name,pw);
 	}
 }
 

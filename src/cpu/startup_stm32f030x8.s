@@ -48,7 +48,7 @@ __initial_sp
 ;   <o>  Heap Size (in Bytes) 
 ; </h>
 
-Heap_Size       EQU     512
+Heap_Size       EQU     600
 
                 AREA    HEAP, NOINIT, READWRITE, ALIGN=3
 __heap_base

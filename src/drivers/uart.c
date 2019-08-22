@@ -496,14 +496,14 @@ int ld_uart_read(U8 xUart,U8*pBuf,int size)
 	
     do
     {
-        while((size>0)&&cbuffer_read(&i->rx,&pout[len])!=FALSE)
+        while((size>0)&& (cbuffer_read(&i->rx,&pout[len])!=FALSE) )
         {
             size--;
             len++;
         }
         if(size<=0)break;
         //字节超时,接收到数据才有效
-        if(len>0)break;
+        break;
     } while (1);
 		
 		/*解锁*/
@@ -562,4 +562,15 @@ int ld_uart_cache(U8 xUart,char**rx,char**tx)
 	return TRUE;
 }
 
+/*
+* 发送是否为空
+*/
+int ld_uart_is_tx_empty(U8 xUart)
+{
+	t_uart_device* i = find(xUart);
+	if( i== NULL ) return FALSE;
+	if(i->tx.pbuf==NULL)return TRUE;
+	if(i->tx.rptr==i->tx.wptr)return TRUE;
+	return FALSE;
+}
 	

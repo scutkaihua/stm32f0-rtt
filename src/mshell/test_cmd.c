@@ -1,7 +1,7 @@
 #include "mshell.h"
 
-Export_DIR("/test",test,2);//定义目录
-Export_DIR("/test/info",info,0);//定义目录
+Export_DIR("/test",test,0);//定义目录
+Export_DIR("/test/info",info,2);//定义目录
 
 int helloworld(void*arg)
 {

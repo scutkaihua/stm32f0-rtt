@@ -7,7 +7,7 @@
 //<s> 版本
 #define MSHELL_VERSION        "mshell v1.0"
 //<s> 终端前导字符
-#define MSHELL_PROMPT         "msh>"
+#define MSHELL_PROMPT         "sh"
 //<o> 命令长度
 #define MSHELL_CMD_SIZE       50
 //<o> 命令参数个数
@@ -28,7 +28,7 @@
 //<e> 支持登录
 #define MSHELL_USING_LOGIN  1
 //<o>登录超时(s)
-#define MSHELL_LOGIN_TIMEOUT 3
+#define MSHELL_LOGIN_TIMEOUT 30
 //<o>用户名最大长度
 #define MSHELL_LOGIN_NAME_MAX 10
 //<o>密码最大长度
@@ -43,5 +43,11 @@
 
 #endif
 
-void rt_kprintf(const char *fmt, ...);
-#define mshell_printf rt_kprintf
+//<c> 使用rt_kprintf作为打印输出
+//#define Using_rt_printf_as_output
+//void rt_kprintf(const char *fmt, ...);
+//#define mshell_printf rt_kprintf
+//</c>
+#ifndef Using_rt_printf_as_output
+extern void mshell_printf(const char *fmt, ...);
+#endif

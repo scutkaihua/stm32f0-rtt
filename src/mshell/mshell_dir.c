@@ -11,7 +11,7 @@ extern int mshell_grade(void);
 #if MSHELL_USING_DIR>0
 
 /*当前目录*/
-char mshell_dir[MSHELL_DIR_MAX] = {'/',0};
+char mshell_dir[MSHELL_DIR_MAX] = {'/','>',0};
 /******************************************************************************
 * 查找 '(' 之前的 '/'
 * line   :输入字符串
@@ -79,7 +79,7 @@ char*dir_parse(char*sdir,char*dir,char*out)
 							p[0] = 0;
 							continue;
 						}else{
-							mshell_printf("No Dir:%s%s\r\n",out,"..");
+							mshell_printf("No Dir:%s%s\n",out,"..");
 							return NULL;
 						}
 					}else{
@@ -134,8 +134,6 @@ int list_dir(int g,char*sh_dir,char*indir,char*dir)
   if(dir[0]==0){dir[0]='/';dir[1] = 0;}
 	mshell_printf("Dir :%s\n",dir);
 	mshell_printf("-- 命令------------ 描述------------------");
-//	mshell_printf("--Global List:\n");
-	
 	//当前路径命令
 	while(dirs != dire)
 	{
