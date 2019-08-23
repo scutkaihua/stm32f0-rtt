@@ -37,7 +37,7 @@ void mshell_prompt(void)
 		extern char* login_user(void);
 		extern int   login_grade(void);
 		//ÓÃ»§Ãû
-		mshell_printf("[%s(%d)",login_user(),login_grade());
+		mshell_printf("[%s",login_user()/*,login_grade()*/);
 		#else
 		mshell_printf("[%s\b",MSHELL_PROMPT);
 		#endif

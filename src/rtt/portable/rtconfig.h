@@ -128,19 +128,19 @@
 // <o>rt heap size <#/4>
 //  <i>Default: 1536
 //  <i>rt thread 使用的内部堆大小
-#define RT_HEAP_SIZE 1280
+#define RT_HEAP_SIZE 64
 
 // <c1>Using Memory Pool Management
 //  <i>Using Memory Pool Management
-#define RT_USING_MEMPOOL
+//#define RT_USING_MEMPOOL
 // </c>
 // <c1>Dynamic Heap Management
 //  <i>Dynamic Heap Management
-#define RT_USING_HEAP
+//#define RT_USING_HEAP
 // </c>
 // <c1>using small memory
 //  <i>using small memory
-#define RT_USING_SMALL_MEM
+//#define RT_USING_SMALL_MEM
 // </c>
 // </h>
 

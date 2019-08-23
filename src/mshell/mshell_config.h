@@ -28,7 +28,7 @@
 //<e> 支持登录
 #define MSHELL_USING_LOGIN  1
 //<o>登录超时(s)
-#define MSHELL_LOGIN_TIMEOUT 30
+#define MSHELL_LOGIN_TIMEOUT 180
 //<o>用户名最大长度
 #define MSHELL_LOGIN_NAME_MAX 10
 //<o>密码最大长度

@@ -7,7 +7,7 @@
 int board_init(void)
 {
 	ld_dev_init();
-	ld_uart_open(2,115200,8,0,1,100,256);
+	ld_uart_open(2,115200,8,0,1,50,150);
 	enable_485_rx();
 	return 1;
 }
