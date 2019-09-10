@@ -30,6 +30,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_it.h"
 #include "includes.h"
+extern void 	rt_interrupt_enter(void);
+extern void 	rt_interrupt_leave(void);
 /** @addtogroup STM32F0308-Discovery_Demo
   * @{
   */
@@ -140,6 +142,10 @@ void USART1_IRQHandler(void)
 		}
 	}	
 	
+	if(USART_GetFlagStatus(pUart,USART_FLAG_TC)==SET)
+	{
+		USART_ClearFlag(pUart,USART_FLAG_TC);	//¶ÁSR
+	}	
 
 	if(USART_GetFlagStatus(pUart,USART_FLAG_ORE)==SET)
 	{

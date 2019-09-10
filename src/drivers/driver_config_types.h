@@ -38,7 +38,7 @@ typedef const struct
 	 t_gpio_map cs;
 	 t_gpio_map data;
 }t_74hc595_map;
-
+//</h>
 
 /*exti*/
 typedef const struct{
@@ -65,6 +65,33 @@ typedef const struct
     U32  keyvalue;         // 键值
 } t_key_map;
 
+
+//<h>/*片上spi配置类型  spi flash 专用*/
+//</h>
+typedef const  struct
+{
+    t_gpio_map mosi;  		//mosi 端口
+    t_gpio_map miso;  		//miso 端口
+		t_gpio_map sclk;  	//sclk 端口
+		t_gpio_map nss;   	//nss  端口
+    char port;       			//片上spi
+		U32 speed;       	//速度分频
+	  U8 sckmode;      		// 0 :low  1:high
+	  U8 latchmode;    		// 触发边沿 0 : 单边  1：双边
+	  U8 master_slave;		//主从 :0 从 1：主
+} t_spif_map;
+
+
+//<h> /*spi flash 配置类型*/
+//</h>
+typedef const struct{
+	
+	U8  spi;          /*使用的spi设备名*/
+	U32 PageSize;      /*页大小*/
+	U32 PagesPerSector;/*扇区页数*/
+	U32 PagesPerBlock; /*块区页数*/
+	U32 Blocks;        /*总块数*/
+}t_spi_flash_map;
 #endif
 
 

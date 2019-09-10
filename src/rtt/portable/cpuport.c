@@ -112,6 +112,8 @@ void rt_hw_hard_fault_exception(struct exception_stack_frame *contex)
     list_thread();
 #endif
 
+	  extern void cpu_nvic_reset(void);
+	  cpu_nvic_reset();
     while (1);
 }
 

@@ -37,7 +37,7 @@
 
 // <o>the size of main thread<1-4086>
 //	<i>Default: 512
-#define RT_MAIN_THREAD_STACK_SIZE 512
+#define RT_MAIN_THREAD_STACK_SIZE 3000
 
 // <c1>using tiny size of memory
 //  <i>using tiny size of memory
@@ -153,7 +153,7 @@
 // <o>the buffer size of console <1-1024>
 //  <i>the buffer size of console
 //  <i>Default: 128  (128Byte)
-#define RT_CONSOLEBUF_SIZE 128
+#define RT_CONSOLEBUF_SIZE 512
 
 // <s>The device name for console
 //  <i>The device name for console

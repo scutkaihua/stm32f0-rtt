@@ -101,13 +101,13 @@ void mshell_printf(const char*fmt,...)
 {
     va_list args;
     int length;
-    static char rt_log_buf[128];
+    static char rt_log_buf[RT_CONSOLEBUF_SIZE];
     va_start(args, fmt);//读取参数列表
     length = rt_vsnprintf(rt_log_buf, sizeof(rt_log_buf) - 1, fmt, args);//格式化字符串
     if (length > RT_CONSOLEBUF_SIZE - 1)//超长判断
         length = RT_CONSOLEBUF_SIZE - 1;
-		enable_485_tx();
-    ld_uart_send(2,rt_log_buf,length);
-		while(is_enable_485_rx()==FALSE);
+		//enable_485_tx();
+    ld_uart_send(1,(U8*)rt_log_buf,length);
+		//while(is_enable_485_rx()==FALSE);
     va_end(args);
 }

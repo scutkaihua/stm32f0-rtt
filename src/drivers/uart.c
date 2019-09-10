@@ -79,7 +79,7 @@ typedef const struct {
 
 static CPU_USART cpu_uart[]= {
 		{0     ,          0,                    0,0,0},             //uart0²»´æÔÚ
-    {USART1,USART1_IRQn,RCC_APB2Periph_USART1,2,GPIO_AF_0 },
+    {USART1,USART1_IRQn,RCC_APB2Periph_USART1,2,GPIO_AF_1 },
     {USART2,USART2_IRQn,RCC_APB1Periph_USART2,1,GPIO_AF_1,},
 //    {USART3,USART3_IRQn,RCC_APB1Periph_USART3,1,0},
 //    {UART4,UART4_IRQn,RCC_APB1Periph_UART4,1,0},

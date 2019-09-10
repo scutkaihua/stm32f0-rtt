@@ -138,7 +138,9 @@ static int mshell_input_arg_parse(char*line)
 				if(ch==')' || ch==',')
 				{
 					token.arg[token.line].value=(void*)(token.value*token.sign);//保存数值
+					token.offset=0;                                             //清0偏移
 					token.line++;                                               //下一个
+					token.data=(char*)token.arg[token.line].data;                   //char*缓冲
 					if(ch==','){token.step=2;continue;}                         //继续下一个参数 
 					return token.line;                                          //')'结尾，表示结束,返回参数个数
 				}
@@ -336,7 +338,7 @@ void mshell_cmd_call(char*line)
 			case 3:a= cmd->func(ARG(0),ARG(1),ARG(2));break;
 			case 4:a= cmd->func(ARG(0),ARG(1),ARG(2),ARG(3));break;
 			case 5:a= cmd->func(ARG(0),ARG(1),ARG(2),ARG(3),ARG(4));break;
-			case 6:a= cmd->func(ARG(0),ARG(1),ARG(2),ARG(3),ARG(4),ARG(5));break;
+//			case 6:a= cmd->func(ARG(0),ARG(1),ARG(2),ARG(3),ARG(4),ARG(5));break;
 			default:
 				if(a==-1)mshell_printf("args error");
 			  return;

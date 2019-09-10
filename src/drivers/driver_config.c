@@ -63,7 +63,7 @@
 t_gpio_map gpio_map[]=
 {
 	//系统LED灯    485发送使能                                                                    
-	  OUT(F,5)     OUT(A,1)
+	  OUT(A,1)     OUT(B,12)
 		driver_config_io_map()
    0,
 };
@@ -90,3 +90,20 @@ t_uart_map uart_map[] = {
 	{0}	
 };
 const unsigned char uart_number = sizeof(uart_map) /(sizeof(t_uart_map)) - 1;
+
+/*************************
+	SPIF  常量设置-->spi flash 专用spi
+*************************/
+//<o> spif
+t_spif_map spif_map[]=
+{
+	{
+		//MOSI    MISO    SCLK    NSS	       spi port   波特率                 SCKMode(0:low 1:high)  Latchmode(0:1edge 1:2edge)   Slavermode(1:master 0:slaver)
+		AF(A,7) AF(A,6) AF(A,5) OUTH(A,4)  1,         SPI_BaudRatePrescaler_4, 1,                     1,                           1
+	},
+	
+  //不使用
+  0,
+};
+const unsigned char spif_number = sizeof(spif_map) / (sizeof(t_spif_map))  - 1;
+

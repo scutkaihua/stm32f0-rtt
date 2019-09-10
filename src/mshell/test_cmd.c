@@ -10,19 +10,12 @@ int helloworld(void*arg)
 }
 Export(test,hw,helloworld,"say hello to world!");
 
-int arg(void*arg1,int data)
+int arg(int data,void*arg1)
 {
-	mshell_printf("arg1:%s,data=%d",arg1!=NULL?arg1:"null",data);
+	mshell_printf("data=%d£¬arg1:%s",data,arg1!=NULL?arg1:"null");
 	return 1;
 }
 Export(test,arg,arg,"test arg");
-
-int reset(void*arg)
-{
-	board_reset();
-	return 1;
-}
-Export(test,rst,reset,"reset mcu.");
 
 int dinfo(void*arg)
 {

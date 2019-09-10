@@ -88,11 +88,20 @@ BOOL ld_iic_cmd(U8 ch,U8 cmd);
 
 
 /*===================================================
-                flash读写数据接口
+                片上flash读写数据接口
 ====================================================*/
 void ld_flash_write(uint32_t WriteAddress, uint8_t *WriteBuf, int32_t WriteNum, uint32_t WriteAddr_page);
 void ld_flash_read(uint32_t ReadAddress, uint8_t *ReadBuf, int32_t ReadNum,uint32_t WriteAddr_page);
 
+/*===================================================
+                spi flash读写数据接口
+====================================================*/
+int ld_spi_flash_init(U8 spi);
+int ld_spi_flash_readID(U8 spi);
+int ld_spi_flash_read(U8 spi, U32 address, U8*data,U32 len);
+int ld_spi_flash_write(U8 spi, U32 address, U8*data,U32 len);
+int ld_spi_flash_erase(U8 spi,U32 address,U32 size);
+int ld_spi_flash_chip_erase(U8 spi);
 /*===================================================
                 外部中断
 ====================================================*/

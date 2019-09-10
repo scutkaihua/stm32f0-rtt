@@ -44,6 +44,15 @@ static int list(char*indir)
 	#endif
 }
 /*************************************************************************
+*			复位命令
+**************************************************************************/
+int reset(void)
+{
+	extern void board_reset(void);
+	board_reset();
+	return 1;
+}
+/*************************************************************************
 *			ver :输出版本
 **************************************************************************/
 static int ver(void)
@@ -62,6 +71,7 @@ static int cls(void)
 Export(root,ls,list,        	  "ls  或者 ls()  列表内容")
 Export(root,ver,ver,        	  "ver 或者 ver() 版本号")
 Export(root,cls,cls,        	  "cls 或者 cls() 清屏")
+Export(root,rst,reset,        	"rst 或者 rst() 复位")
 /*************************************************************************
 *			cd :更改目录 
 **************************************************************************/
@@ -79,8 +89,6 @@ extern int logout(void);
 Export(root,login,login,        "login xxx xxxx 登录")
 Export(root,logout,logout,      "logout 登出")
 #endif
-
-
 /*************************************************************************
 *			优先处理常用命令
 **************************************************************************/
@@ -120,6 +128,11 @@ int mshell_run_line_first(char*line)
 	if((strcmp("cls",line)==0)||(strcmp("cls()",line)==0))
 	{
 		cls();return 1;
+	}
+	/*================cls===============================*/
+	if((strcmp("rst",line)==0)||(strcmp("rst()",line)==0))
+	{
+		reset();return 1;
 	}
 	/*================login=============================*/
 	#if MSHELL_USING_LOGIN > 0

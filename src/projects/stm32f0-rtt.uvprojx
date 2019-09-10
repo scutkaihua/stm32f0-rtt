@@ -312,7 +312,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>4</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -324,7 +324,7 @@
             <wLevel>2</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
-            <uC99>0</uC99>
+            <uC99>1</uC99>
             <uGnu>0</uGnu>
             <useXO>0</useXO>
             <v6Lang>1</v6Lang>
@@ -558,6 +558,11 @@
               <FilePath>..\drivers\flash.c</FilePath>
             </File>
             <File>
+              <FileName>spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\spi.c</FilePath>
+            </File>
+            <File>
               <FileName>iic.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\drivers\iic.c</FilePath>
@@ -628,6 +633,11 @@
               <FileType>1</FileType>
               <FilePath>..\drivers\74hc595.c</FilePath>
             </File>
+            <File>
+              <FileName>w25qxx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\drivers\w25qxx.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -667,6 +677,41 @@
               <FileName>test_cmd.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\mshell\test_cmd.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>fs</GroupName>
+          <Files>
+            <File>
+              <FileName>lfs_config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\fs\lfs_config.h</FilePath>
+            </File>
+            <File>
+              <FileName>lfs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\fs\lfs.c</FilePath>
+            </File>
+            <File>
+              <FileName>lfs.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\fs\lfs.h</FilePath>
+            </File>
+            <File>
+              <FileName>lfs_util.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\fs\lfs_util.c</FilePath>
+            </File>
+            <File>
+              <FileName>lfs_util.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\fs\lfs_util.h</FilePath>
+            </File>
+            <File>
+              <FileName>lfs_test.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\fs\lfs_test.c</FilePath>
             </File>
           </Files>
         </Group>
