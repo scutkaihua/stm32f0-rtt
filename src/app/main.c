@@ -22,7 +22,10 @@ int main(void)
 		{
 			char ch=0;
 			if(ld_uart_read(1,(U8*)&ch,1)==1)
+			{
 				mshell(ch);
+				ld_gpio_set(1,!(ld_gpio_get(1)));
+			}
 		}
 		rt_thread_mdelay(10);
 		i++;

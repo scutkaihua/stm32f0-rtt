@@ -105,29 +105,13 @@ int lfs_id(void)
 	int id = ld_spi_flash_readID(1);
   return id;	
 }
-int lfs_map(void)
+int lfs_list(void)
 {
-	int y = 32;
-	U8 a[SPI_FLASH_FULL_SIZE/BLOCK_SIZE+2];
-	for(int j=0;j<y;j++)
-	{	
-		memset(a,0,sizeof(a));
-		int i=0;
-		for(;i<sizeof(counter)/sizeof(int);i++)
-		{
-			if(counter[i]/128==j)a[i]='*';
-			else a[i]=' ';
-		}
-		a[i]='\n';
-		mshell_printf(a);
-		delayms(10);
-	}
-	return 1;
+	
 }
 
 Export_DIR("/lfs",lfs,0);//¶¨ÒåÄ¿Â¼
 Export(lfs,e,lfs_chip_erase,"È«ÅÌ²Á³ý");
 Export(lfs,t,lfs_test,"²âÊÔlfs.");
 Export(lfs,i,lfs_id,"¶ÁÈ¡flash id");
-Export(lfs,m,lfs_map,"Ð´Í¼");
 
